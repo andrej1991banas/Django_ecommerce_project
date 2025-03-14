@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>profile page</title>
+</head>
+<body>
+<h1>  this is profile page</h1>
+
+<h2>Welcome, {{ first_name }} {{ last_name }}</h2>
+<p>Username: {{ username }}</p>
+<p>Email: {{ email }}</p>
+<p>Location: {{ location }}</p>
+<p>Location: {{ phone}}</p>
+
+<a href="{% url 'logout' %}">logout here</a>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+<div class="container my-5">
+    <!-- Product Details Section -->
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-6 text-center">
+            <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.brand }} - {{ product.model }}" />
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <h1 class="text-secondary">{{ product.brand }} - {{ product.model }}</h1>
+            <hr />
+            <p>
+                <strong>Category:</strong> {{ product.category }}
+            </p>
+            <p>
+                <strong>Price:</strong> ${{ product.price }}
+            </p>
+            <p>
+                <strong>Description:</strong> {{ product.description }}
+            </p>
+            <a href="{% url 'show-products' %}" class="btn btn-outline-secondary mt-4">
+                <i class="bi bi-arrow-left"></i> Back to Product List
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+
+<form method="POST", autocomplete="off">
+      {% csrf_token %}
+    {{productform.as_p}}
+    <input type="submit" value="Pridaj produkt"/>
+
+
+</form>
+
+{% endblock %}

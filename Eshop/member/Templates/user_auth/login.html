@@ -1,0 +1,36 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+<!--Header-->
+
+  <header class="bg-dark py-5">
+    <div class="container px-4 px4lg-5 my-5">
+      <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder"> Welcome to Thymallus </h1>
+        <p class="lead fw-normal
+        text-white-50 mb-0"> Sign in</p>
+      </div>
+    </div>
+  </header>
+
+
+
+    <!-- Login Form -->
+    <div class="container my-5 d-flex justify-content-center">
+
+        <form method="POST" autocomplete="off" class="needs-validation">
+            {% csrf_token %}
+            <!-- Render Login Form -->
+            {{ loginform.as_p }}
+
+            <!-- Submit Button -->
+            <div class="text-center mt-4">
+                <input class="btn btn-secondary btn-lg w-100" type="submit" value="Login">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

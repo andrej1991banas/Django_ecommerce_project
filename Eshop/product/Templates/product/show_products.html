@@ -1,0 +1,41 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+
+
+<a href="{% url 'index' %}">Back to Homepage</a>
+
+{% for product in products %}
+  <h1>{{ product.brand }}</h1>
+  <p><strong>Model:</strong>{{ product.model }}</p>
+  <p><strong>Price:</strong>{{ product.price }}</p>
+  <form action="{% url 'product-details' product.id %}" method="get">
+            <input type="submit" value="Details" />
+        </form>
+{% endfor %}
+
+<p> ---------------------------------</p>
+
+ <h1>Product List</h1>
+
+    <ul>
+        <!-- Loop through products -->
+        {% for product in products %}
+            <li>
+                <strong>Category:</strong> {{ product.category }} <br>
+                <strong>Brand:</strong> {{ product.brand }} <br>
+                <strong>Model:</strong> {{ product.model }} <br>
+                <strong>Price:</strong> {{ product.price }} <br>
+                <a href="{% url 'product-details' product.id %}">View Details</a>
+            </li>
+        {% empty %}
+            <!-- Message if no products are available -->
+            <p>No products available.</p>
+        {% endfor %}
+    </ul>
+
+
+<a href="{% url 'index' %}">Back to Homepage</a>
+
+{% endblock %}

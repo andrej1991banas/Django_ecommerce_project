@@ -1,0 +1,39 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+<!--Header-->
+
+  <header class="bg-dark py-5">
+    <div class="container px-4 px4lg-5 my-5">
+      <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder"> Create Your Account</h1>
+        <p class="lead fw-normal
+        text-white-50 mb-0"> Register in Thymallus</p>
+      </div>
+    </div>
+  </header>
+
+<!-- Back to Homepage Link -->
+<div class="container my-4">
+  <a class="btn btn-outline-secondary" href="{% url 'index' %}">
+    <i class="bi bi-arrow-left"></i> Back to Homepage
+  </a>
+</div>
+
+<!-- Registration Form Section -->
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4 w-50">
+    <h2 class="text-center mb-4 text-dark">Register</h2>
+    <form method="POST" autocomplete="off" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {{ registerform.as_p }}
+
+      <div class="text-center mt-4">
+        <input class="btn btn-primary btn-lg w-100" type="submit" value="Register" />
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
