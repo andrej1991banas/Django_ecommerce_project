@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from product.models import Product
-
+from order.models import Order
 
 
 
@@ -61,6 +61,8 @@ def register(request):
 def dashboard(request):
     current_user = request.user
     current_member = current_user.member
+    orders = current_member.orders.all()  # Fetch all orders for this member
+
     context = {
         'username': current_user.username,  # Username
         'email': current_user.email,  # Email
@@ -68,6 +70,7 @@ def dashboard(request):
         'last_name': current_user.last_name,  # Last Name
         'location': current_member.location,  # Member's location
         'phone': current_member.phone_number,
+        'orders': orders,
     }
     return render(request, 'user_auth/dashboard.html', context)
 
