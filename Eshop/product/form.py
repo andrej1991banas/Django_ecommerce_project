@@ -17,6 +17,7 @@ class AddProduct(forms.ModelForm):
             product.brand = self.cleaned_data['brand'].capitalize()
             product.model = self.cleaned_data['model'].capitalize()
             product.price = self.cleaned_data['price']
+            # product.image = self.cleaned_data['image']
 
             # Generate a description if not provided
             category_name=product.category.name

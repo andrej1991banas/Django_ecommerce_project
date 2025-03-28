@@ -5,8 +5,9 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.template import loader
-from product.models import Product
-from order.models import Order
+from product.models import Product, Category
+
+
 
 
 
@@ -83,3 +84,22 @@ def logout(request):
 
 def about(request):
     return render(request, 'user_auth/about.html')
+
+
+def navbar_view(request):
+    # Fetch all categories
+    categories = Category.objects.all()  # Query all categories
+
+    context = {
+        'categories': categories,  # Pass categories to the template
+    }
+    return render(request, 'user_auth/navbar.html', context)
+
+
+def test (request):
+    #testing page
+    categories = Category.objects.all()  # Query all categories
+    context = {
+        'categories': categories,  # Pass categories to the template
+    }
+    return render(request, 'user_auth/test.html', context)

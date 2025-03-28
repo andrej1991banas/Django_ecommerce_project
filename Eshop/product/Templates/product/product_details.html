@@ -23,11 +23,47 @@
             <p>
                 <strong>Description:</strong> {{ product.description }}
             </p>
+
+            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+            <br>
             <a href="{% url 'show-products' %}" class="btn btn-outline-secondary mt-4">
                 <i class="bi bi-arrow-left"></i> Back to Product List
             </a>
+            <p> ID: {{product.id}}</p>
+            <button type="button" value="{{product.id}}" class="btn btn-outline-secondary mt-4" id="add-cart"> Add to cart</button>
         </div>
     </div>
 </div>
+
+<script>
+
+<!--    checking if button pressed-->
+    $(document).on('click', '#add-cart', function(e){
+
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'cart-add' %}",
+        data: {
+            product_id: $('#add-cart').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json){
+            console.log(json)
+<!--    i dont really need line above         -->
+            document.getElementById("cart_quantity").
+                textContent = json.qty
+            },
+            error: function(xhr, errmsg, err){
+            }
+
+    });
+
+    })
+
+</script>
+
+
 
 {% endblock %}

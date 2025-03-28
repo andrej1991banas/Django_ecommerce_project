@@ -7,7 +7,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['id', 'name']
 
 # Register Member to admin with customization
 admin.site.register(Product, ProductAdmin)
