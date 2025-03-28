@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .form import AddProduct
-from .models import Product
+from .models import Product, Category
 from django.http import HttpResponse
-from .utils import generate_product_description
 
 
 def add_product(request):
@@ -15,16 +14,10 @@ def add_product(request):
     else:
         form = AddProduct()
 
-        context = {'productform': form}  # Return the generated description (if any)
+    context = {'productform': form}  # Return the generated description (if any)
 
 
     return render(request, 'product/add_product.html', context)
-
-
-
-def your_name(request):
-    return render(request,'product/your_name.html')
-
 
 
 def show_products(request):
@@ -34,28 +27,11 @@ def show_products(request):
     return render(request,'product/show_products.html', context)
 
 
-#
-# def generate_product_description_view(request, product_id):
-#     # View to generate a product description for a specific product.
-#     if request.method == "POST":
-#         product = get_object_or_404(Product, id=product_id)
-#
-#         # Assume the prompt is submitted through a form
-#         prompt = request.POST.get("prompt")
-#         if not prompt:
-#             return HttpResponse("Prompt is required!", status=400)
-#
-#         # Generate the description using the utility
-#         description = generate_product_description(prompt)
-#
-#         if description:
-#             product.description = description
-#             product.save()
-#             return HttpResponse("Product description updated successfully!")
-#         else:
-#             return HttpResponse("Failed to generate description!", status=500)
-#     else:
-#         return render(request, "generate_description.html")
+def category_rods(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    products = Product.objects.filter(category=category)
+    context = {'category': category, 'products': products}
+    return render(request, 'product/category_search.html', context)
 
 
 def product_details(request, id):
@@ -63,5 +39,7 @@ def product_details(request, id):
     context = {'product': product}
     return render(request, 'product/product_details.html', context)
 
+
 def delete_product(request, id):
     pass
+

@@ -6,7 +6,7 @@ class Category(models.Model):
 
 
     class Meta:
-        verbose_name_plural = "Categories"
+        verbose_name_plural = "categories"
 
     def __str__(self):
         return self.name
@@ -18,8 +18,9 @@ class Product(models.Model):
     brand = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='EUR')
+    image = models.ImageField(upload_to='images/product/', blank=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/product/')
+
 
     def __str__(self):
         return f'{self.category} {self.brand} {self.model}'

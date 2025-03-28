@@ -1,0 +1,228 @@
+@charset "UTF-8";
+/*!
+ * Start Bootstrap - Shop Item v5.0.6 (https://startbootstrap.com/template/shop-item)
+ * Copyright 2013-2023 Start Bootstrap
+ * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-shop-item/blob/master/LICENSE)
+ */
+/*!
+ * Bootstrap v5.2.3 (https://getbootstrap.com/)
+ * Copyright 2011-2022 The Bootstrap Authors
+ * Copyright 2011-2022 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+/* Bootstrap Base Variables */
+:root {
+    --bs-blue: #0d6efd;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #ffc107;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-black: #000;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-gray-100: #f8f9fa;
+    --bs-gray-200: #e9ecef;
+    --bs-gray-300: #dee2e6;
+    --bs-gray-400: #ced4da;
+    --bs-gray-500: #adb5bd;
+    --bs-gray-600: #6c757d;
+    --bs-gray-700: #495057;
+    --bs-gray-800: #343a40;
+    --bs-gray-900: #212529;
+    --bs-primary: #0d6efd;
+    --bs-secondary: #6c757d;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+    /* ... rest of Bootstrap variables ... */
+}
+
+/* Fly Fishing Theme Variables */
+:root {
+    --flyfishing-primary: #2a5d3f;    /* Deep forest green */
+    --flyfishing-secondary: #4a8c9b;  /* River teal */
+    --flyfishing-accent: #d98c3f;     /* Rusty orange (like a fly lure) */
+    --flyfishing-light: #f5f6e9;      /* Off-white (like parchment or light water) */
+    --flyfishing-dark: #1a2b2e;       /* Charcoal (like wet rocks) */
+
+    /* Override Bootstrap defaults with theme colors */
+    --bs-primary: var(--flyfishing-primary);
+    --bs-secondary: var(--flyfishing-secondary);
+    --bs-success: var(--flyfishing-accent);
+    --bs-light: var(--flyfishing-light);
+    --bs-dark: var(--flyfishing-dark);
+}
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--flyfishing-dark);
+    background-color: var(--flyfishing-light);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* Headings */
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--flyfishing-primary);
+}
+
+/* Container Adjustments */
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    margin-right: auto;
+    margin-left: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--flyfishing-primary);
+    border-color: var(--flyfishing-primary);
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--flyfishing-secondary);
+    border-color: var(--flyfishing-secondary);
+}
+
+.btn-outline-secondary {
+    color: var(--flyfishing-dark);
+    border-color: var(--flyfishing-dark);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--flyfishing-secondary);
+    color: var(--flyfishing-light);
+}
+
+/* Cards (Product Listings) */
+.card {
+    border: none;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    border-bottom: 2px solid var(--flyfishing-secondary);
+}
+
+.card-title {
+    color: var(--flyfishing-primary);
+    font-size: 1.25rem;
+}
+
+.card-text {
+    color: var(--flyfishing-dark);
+}
+
+.card-text .text-success {
+    color: var(--flyfishing-accent);
+}
+
+/* Links */
+a {
+    color: var(--flyfishing-secondary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--flyfishing-accent);
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--flyfishing-dark);
+    color: var(--flyfishing-light);
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Bootstrap Responsive Grid (keeping essential parts) */
+@media (min-width: 576px) {
+    .container-sm, .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container-md, .container-sm, .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container-lg, .container-md, .container-sm, .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-xl, .container-lg, .container-md, .container-sm, .container {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
+        max-width: 1320px;
+    }
+}
+
+/* Add other Bootstrap utilities as needed */

@@ -1,10 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Cart Summary</title>
-</head>
-<body>
+{% extends 'user_auth/base.html' %}
 
-</body>
-</html>
+{% block content %}
+<!--Header-->
+
+  <header class="header-bg py-5">
+    <div class="container px-4 px4lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder"> Shopping cart</h1>
+            <p class="lead fw-normal text-white-50 mb-0"> Now check your cart </p>
+        </div>
+    </div>
+</header>
+
+
+  <div class="container">
+
+      {% if cart_products %}
+            {% for product in cart_products %}
+            <div class="row">
+            <!-- Product Image -->
+            <div class="col-md-6 text-center">
+                <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.brand }} - {{ product.model }}" />
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-md-6">
+                <h1 class="text-secondary">{{ product.brand }} - {{ product.model }}</h1>
+                <hr />
+                <p>
+                    <strong>Category:</strong> {{ product.category }}
+                </p>
+                <p>
+                    <strong>Price:</strong> ${{ product.price }}
+                </p>
+                <p>
+                    <strong>Description:</strong> {{ product.description }}
+                </p>
+
+                <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                <br>
+                <button type="button" data-index="{{product.id}}"
+                        class="btn btn-danger mt-4" id="cart-delete">Remove</button>
+
+            </div>
+            </div>
+            <br/>
+            <!--      <br/>-->
+            <!--        {{product}} {{product.price}} <br/>-->
+            {% endfor %}
+      {% else %}
+      <h4>There's nothing in your Shopping Cart... </h4>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      {% endif %}
+      <div class="row justify-content-center">
+
+    </div>
+  </div>
+
+    <a href="{% url 'show-products' %}" class="btn btn-outline-secondary mt-4">
+               <i class="bi bi-arrow-left"></i> Back to Product List
+           </a>
+<!--    <button type="button" data-index="{{product.id}}"-->
+<!--    class="btn btn-outline-secondary mt-4 update-cart">Update</button>-->
+
+<script>
+$(document).on('click', '#cart-delete', function(e){
+
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'cart-delete' %}",
+        data: {
+            product_id: $(this).data('index'),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json){
+            console.log(json)
+<!--    i dont really need line above         -->
+            document.getElementById("cart_quantity").
+                textContent = json.qty
+                location.reload();
+            },
+
+            error: function(xhr, errmsg, err){
+            }
+
+    });
+
+    })
+
+</script>
+
+{% endblock %}

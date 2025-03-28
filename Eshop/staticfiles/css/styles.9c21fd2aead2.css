@@ -10917,7 +10917,7 @@ a:hover {
 
 /* Container Adjustments */
 .container {
-    background-color: rgba(210, 180, 140, 0.6);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     padding: 2rem;
 }
@@ -10930,8 +10930,6 @@ a:hover {
     text-align: center;
 }
 
-
-
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .card {
@@ -10941,5 +10939,3 @@ a:hover {
         width: 100%;
     }
 }
-
-

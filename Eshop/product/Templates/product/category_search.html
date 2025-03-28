@@ -1,0 +1,68 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Products by Category</h1>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.model }}" style="max-height: 200px; object-fit: cover;">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200" class="card-img-top" alt="No image" style="max-height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.brand }} {{ product.model }}</h5>
+                        <p class="card-text fw-bold text-success">${{ product.price }}</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{% url 'product-details' product.id %}" class="btn btn-light btn-sm">View Details</a>
+                        <button type="button" value="{{ product.id }}" class="btn btn-dark btn-sm add-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No products available in this category.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Set up CSRF token for all AJAX POST requests
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            }
+        }
+    });
+
+    // Handle click on any "add-cart" button
+    $(document).on('click', '.add-cart', function(e) {
+        e.preventDefault();
+
+        var productId = $(this).val(); // Get the value of the clicked button
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart-add' %}",
+            data: {
+                product_id: productId,
+                action: 'post'
+            },
+            success: function(json) {
+                // Update cart quantity in the DOM
+                document.getElementById("cart_quantity").textContent = json.qty;
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("Error:", xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+</script>
+
+{% endblock %}

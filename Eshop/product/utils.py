@@ -2,17 +2,19 @@ import os #getting API key from system enviroment
 from openai import OpenAI
 
 
+
+
 def generate_product_description(prompt):
     """
     Utility function to generate a product description using OpenAI API.
     """
     client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key='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', #just in this case it will be hardcoded here
+        base_url="https://api.deepseek.com/v1",
+        api_key='sk-4bd5549b441e4719b82c46013ca9ccf1', #just in this case it will be hardcoded here
     )
     try:
         completion = client.chat.completions.create(
-            model="deepseek/deepseek-r1:free",
+            model="deepseek-chat",
             messages=[
                 {"role": "user", "content": prompt}
             ]
