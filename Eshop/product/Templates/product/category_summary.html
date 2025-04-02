@@ -1,0 +1,31 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+<!--Header-->
+
+  <header class="header-bg py-5">
+    <div class="container px-4 px4lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder"> Choose category</h1>
+            <p class="lead fw-normal text-white-50 mb-0"> Choose category from our products</p>
+        </div>
+    </div>
+</header>
+
+{{ categories}}
+{% for category in categories %}
+<h4> {{category}} </h4>
+
+{% endfor %}
+  <div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-8 text-center">
+          <br/><br/>
+          {{ categories}}
+        </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -12,7 +12,16 @@
         </div>
     </div>
 </header>
-
+<!-- Display messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
 
 
@@ -33,4 +42,7 @@
     </div>
 </div>
 
+
 {% endblock %}
+
+

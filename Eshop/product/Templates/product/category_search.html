@@ -14,7 +14,7 @@
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ product.brand }} {{ product.model }}</h5>
-                        <p class="card-text fw-bold text-success">${{ product.price }}</p>
+                        <p class="card-text fw-bold text-success">{{ product.price }}</p>
                     </div>
                     <div class="card-footer text-center">
                         <a href="{% url 'product-details' product.id %}" class="btn btn-light btn-sm">View Details</a>
