@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .form import AddProduct
 from .models import Product, Category
 from django.http import HttpResponse
-
+from django.contrib import messages
 
 def add_product(request):
     if request.method == 'POST':
@@ -42,4 +42,13 @@ def product_details(request, id):
 
 def delete_product(request, id):
     pass
+
+
+def category_summary(request):
+    #get all categories from db
+    categories = Category.objects.all()
+
+    context = {'categories': categories}
+    return render(request, 'product/category_summary.html', context)
+
 

@@ -47,3 +47,19 @@ class Cart:
         if product_id in self.cart:
             del self.cart[product_id]
         self.session.modified = True
+
+
+    def cart_total(self):
+        #get product IDs
+        products_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=products_ids)
+        price_total = self.cart
+        #start counting from 0
+        total = 0
+
+        for key in price_total:
+            for product in products:
+                if int(key) == product.id:
+                    price_int = price_total[key]['price'].replace('€', '')
+                    total += float(price_int)
+        return total

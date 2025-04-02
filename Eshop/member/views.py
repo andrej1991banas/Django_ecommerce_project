@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from product.models import Product, Category
+from django.contrib import messages
 
 
 
@@ -33,11 +34,12 @@ def login(request):
 
             if user is not None:
                 auth.login(request, user)
+                messages.success(request, "Welcome, you successfully logged in!")
                 return redirect("dashboard")
 
             else:
-                return HttpResponse("Invalid username or password")
-
+                return HttpResponse("Invalid username or password")  # Error message for failed login
+                # return render(request, 'user_auth/login.html', {'loginform': form})
     context= {'loginform':form}
     return render(request, 'user_auth/login.html', context)
 
@@ -48,6 +50,7 @@ def register(request):
         form = CreateUserForm(request.POST)#builtin form for create user
         if form.is_valid():
             form.save() #validating the values of inputs
+            messages.success(request, "Your account has been created!")
             return redirect("login")
     else:
         form = CreateUserForm()
@@ -79,7 +82,7 @@ def dashboard(request):
 
 def logout(request):
     auth.logout(request) #creating request for HTML file to apply logout
-
+    messages.success(request, f"You logged out successfully!")
     return redirect("")
 
 def about(request):
@@ -102,4 +105,5 @@ def test (request):
     context = {
         'categories': categories,  # Pass categories to the template
     }
+
     return render(request, 'user_auth/test.html', context)
