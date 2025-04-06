@@ -1,9 +1,22 @@
 {% extends 'user_auth/base.html' %}
 
 {% block content %}
+
+<!-- Display messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
 <div class="container my-5">
     <h1 class="text-center mb-4">Products by Category</h1>
-    <div class="row">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-5 row-cols-xl-5 justify-content-center">
         {% for product in products %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -57,6 +70,7 @@
             success: function(json) {
                 // Update cart quantity in the DOM
                 document.getElementById("cart_quantity").textContent = json.qty;
+                location.reload();
             },
             error: function(xhr, errmsg, err) {
                 console.log("Error:", xhr.status + ": " + xhr.responseText);

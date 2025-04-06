@@ -7,7 +7,7 @@ from django.contrib import messages
 def add_product(request):
     if request.method == 'POST':
         # Handle the form submission here (e.g., save input data, process logic)
-            form = AddProduct(request.POST)
+            form = AddProduct(request.POST, request.FILES)
             if form.is_valid():
                 form.save()  # validating the values of inputs
                 return redirect("add-product") #after processing redirect to

@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .form import CreateUserForm, LoginForm
-from django.contrib.auth.models import auth
+from .form import CreateUserForm, LoginForm, UpdateUserForm, ChangePasswordForm
+from django.contrib.auth.models import auth, User
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from product.models import Product, Category
+from .models import Member
+from cart.cart import Cart
 from django.contrib import messages
+from django.db.models import Q
+import json
 
 
 
@@ -34,6 +38,25 @@ def login(request):
 
             if user is not None:
                 auth.login(request, user)
+                #Using Cart data
+                current_user = Member.objects.get(user__id= request.user.id)
+                #get data from saved cart tangled to the user
+                saved_cart = current_user.old_cart
+                #convert db string to dict, old_cart (str)
+                if saved_cart:
+                    #convert to dict with JSON
+                    converted_cart = json.loads(saved_cart) #from str to dict
+
+                    #add loaded dict to cart_session
+                    cart = Cart(request)
+                    for key in converted_cart.keys():
+                        cart.db_add(product=Product.objects.get(id=key))
+
+
+
+
+
+
                 messages.success(request, "Welcome, you successfully logged in!")
                 return redirect("dashboard")
 
@@ -54,6 +77,9 @@ def register(request):
             return redirect("login")
     else:
         form = CreateUserForm()
+        for error in list(form.errors.items()):
+            messages.error(request, error[1])
+            return redirect("register")
 
     context= {'registerform':form}
 
@@ -79,11 +105,11 @@ def dashboard(request):
     return render(request, 'user_auth/dashboard.html', context)
 
 
-
+@login_required (login_url="login") #have to be logged in to view the page
 def logout(request):
     auth.logout(request) #creating request for HTML file to apply logout
     messages.success(request, f"You logged out successfully!")
-    return redirect("")
+    return redirect("index")
 
 def about(request):
     return render(request, 'user_auth/about.html')
@@ -107,3 +133,76 @@ def test (request):
     }
 
     return render(request, 'user_auth/test.html', context)
+
+@login_required (login_url="login") #have to be logged in to view the page
+def update_user(request):
+    #updating the user profile
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id = request.user.id)
+
+        # Getting the form instance, pre-filled with user data
+        update_form = UpdateUserForm(request.POST or None, instance=current_user) #getting curent info from user to the form
+        if update_form.is_valid():
+            updated_user = update_form.save() #update user first
+
+            # Access the related Member object and update it
+            if hasattr(updated_user, 'member'):  # Check if the User has a related Member
+                member = updated_user.member
+                member.first_name = updated_user.first_name  # Sync first_name with User
+                member.save()  # Save the Member model
+
+
+            messages.success(request, "Your account has been updated!")
+            return redirect("dashboard")
+        return render(request, 'user_auth/update_user.html', {'update_form': update_form})
+    else:
+        messages.success(request, "You must be logged in to access this page")
+        return redirect('index')
+
+@login_required (login_url="login") #have to be logged in to view the page
+def update_password(request):
+
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id = request.user.id)
+        if request.method == 'POST':
+            #do stuff
+            form = ChangePasswordForm(request.user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your password has been updated! Please log in again")
+                login(request, current_user)
+                return redirect("login")
+            else:
+                for error in list(form.errors.items()):
+                    messages.error(request, error[1])
+                    return redirect("update-password")
+
+        else:
+            form= ChangePasswordForm(request.user)
+            return render(request, 'user_auth/update_password.html', {'form': form})
+
+    else:
+        messages.success(request, "You must be logged in to access this page")
+        return redirect('index')
+
+
+def search(request):
+    # determine if they filled out the form
+    if request.method == "POST":
+        searched = request.POST['searched']
+        #Query database model data
+        searched = Product.objects.filter(Q (brand__icontains=searched) | Q (model__icontains=searched) | Q (description__icontains=searched))
+
+        #conditions  for no result
+        if not searched:
+            messages.success(request, "Please, try your search again")
+            return render(request, 'user_auth/index.html', {
+                'searched': []
+            })
+
+        else:
+            return render(request, 'user_auth/search.html', {'searched': searched})
+    else:
+        return render(request, 'user_auth/search.html', {})
+
+
