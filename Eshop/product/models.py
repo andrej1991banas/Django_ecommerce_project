@@ -18,7 +18,7 @@ class Product(models.Model):
     brand = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='EUR')
-    image = models.ImageField(upload_to='images/product/', blank=True)
+    image = models.ImageField(upload_to='images/product/', blank=True, null=True)
     description = models.TextField()
 
 

@@ -1,0 +1,55 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+<!--Header-->
+
+  <header class="header-bg py-5">
+    <div class="container px-4 px4lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder"> Search Products</h1>
+            <p class="lead fw-normal text-white-50 mb-0"> Find Your Product ...</p>
+        </div>
+    </div>
+</header>
+
+
+ <div class="container my-5">
+    <div class="row">
+        {% if searched %}
+            {% for product in searched %}
+                <div class="col-md-2 mb-4"> <!-- Adjusted col-2 for 5 products per row -->
+                    <div class="card h-100 shadow-sm">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.model }}" style="max-height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/200" class="card-img-top" alt="No image" style="max-height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.brand }} {{ product.model }}</h5>
+                            <p class="card-text fw-bold text-success">{{ product.price }}</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'product-details' product.id %}" class="btn btn-light btn-sm">View Details</a>
+                            <button type="button" value="{{ product.id }}" class="btn btn-dark btn-sm add-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                {% if forloop.counter|divisibleby:"3" %} <!-- Close and start a new row every 5 products -->
+                    </div>
+                    <div class="row">
+                        {% endif %}
+             {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No products found that match your search.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<p>DEBUG: searched={{ searched }}</p>
+<p>DEBUG: forloop.counter={{ forloop.counter }}</p>
+
+{% endblock %}

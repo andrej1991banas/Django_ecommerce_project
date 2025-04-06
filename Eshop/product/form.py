@@ -7,7 +7,7 @@ from .utils import generate_product_description
 class AddProduct(forms.ModelForm):
         class Meta:
             model = Product
-            fields = ['category', 'brand', 'model', 'price']
+            fields = ['category', 'brand', 'model', 'price', 'image']
 
 
         def save(self, commit=True):
@@ -17,7 +17,7 @@ class AddProduct(forms.ModelForm):
             product.brand = self.cleaned_data['brand'].capitalize()
             product.model = self.cleaned_data['model'].capitalize()
             product.price = self.cleaned_data['price']
-            # product.image = self.cleaned_data['image']
+            product.image = self.cleaned_data.get('image')
 
             # Generate a description if not provided
             category_name=product.category.name

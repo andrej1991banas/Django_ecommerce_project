@@ -3,7 +3,7 @@ from .models import Product, Category
 
 # Register your models here.
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['category', 'brand', 'model', 'price']  # Display in admin list
+    list_display = ['id','category', 'brand', 'model', 'price']  # Display in admin list
 
 
 class CategoryAdmin(admin.ModelAdmin):
