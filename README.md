@@ -1,4 +1,4 @@
-# ANdrej Banas Ecommerce Django project - portfolio
+# Andrej Banas Ecommerce Django project - portfolio
 
 ![Python](https://img.shields.io/badge/python-3.x-blue.svg) - 4.2.20
 ![Django](https://img.shields.io/badge/django-4.x-green.svg) - 3.12.5.
@@ -11,8 +11,11 @@
 ## Features
 
 - User authentication (login, logout, registration)
+- User updates, password managment
 - Product management (add, edit, delete products)
+- Add product with AI client to create description for products automaticaly
 - Shopping cart functionality
+- Shopping card persistence after or before log in
 - Responsive design with Bootstrap
 - [Add more features specific to your project]
 
@@ -21,7 +24,7 @@
 - Python 3.8 or higher
 - Django 4.2 or higher
 - PostgreSQL (or specify your database, e.g., SQLite for development)
-- [Other dependencies, e.g., Pillow for image handling]
+- For other dependecies see the Requirements.txt
 
 ## Installation
 
@@ -29,5 +32,5 @@ Follow these steps to set up the project locally:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/yourproject.git
-   cd yourproject
+   git clone https://github.com/andrej1991banas/Django_ecommerce_project.git
+   cd Django_ecommerce_project
