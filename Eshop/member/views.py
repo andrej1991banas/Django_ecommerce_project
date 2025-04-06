@@ -52,11 +52,6 @@ def login(request):
                     for key in converted_cart.keys():
                         cart.db_add(product=Product.objects.get(id=key))
 
-
-
-
-
-
                 messages.success(request, "Welcome, you successfully logged in!")
                 return redirect("dashboard")
 
@@ -134,6 +129,7 @@ def test (request):
 
     return render(request, 'user_auth/test.html', context)
 
+
 @login_required (login_url="login") #have to be logged in to view the page
 def update_user(request):
     #updating the user profile
@@ -158,6 +154,7 @@ def update_user(request):
     else:
         messages.success(request, "You must be logged in to access this page")
         return redirect('index')
+
 
 @login_required (login_url="login") #have to be logged in to view the page
 def update_password(request):
