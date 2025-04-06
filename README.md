@@ -6,7 +6,9 @@
 
 ## Description
 
-[Flyfishing Ecommerce] is a Django-based web application that [briefly describe what it does, e.g., "manages an online store with product listings and a shopping cart"]. This project aims to [state the purpose, e.g., "provide a simple e-commerce solution for small businesses"].
+[Flyfishing Ecommerce] is a Django-based web application that provides basic funcionalities for users (register, log in, log out, password managment, updating profiles, store data in db), Cart managment updating shopping cart, deleting and adding new items, cart persistance for logged users or add items to users cart after log in into account. CRUD operations for products, category selection, using AI client to handle create decsription for products. Seach line for users to use easy search for products.  
+
+This project aims to demonstrate my skills in backend and frontend software or webapp develompment. Focus on real time scenario situations, data colecting demands and user friendly enviroment.
 
 ## Features
 
