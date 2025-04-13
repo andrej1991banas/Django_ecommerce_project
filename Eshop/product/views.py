@@ -1,8 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .form import AddProduct
 from .models import Product, Category
-from django.http import HttpResponse
+from django.http import Http404,HttpResponse
+
 from django.contrib import messages
+
+# Custom 404 error handler
+def custom_404_view(request, exception):
+    return render(request, "product/404.html", status=404)
+
+
 
 def add_product(request):
     if request.method == 'POST':
@@ -28,10 +35,13 @@ def show_products(request):
 
 
 def category_rods(request, category_id):
+
     category = get_object_or_404(Category, id=category_id)
     products = Product.objects.filter(category=category)
+
     context = {'category': category, 'products': products}
     return render(request, 'product/category_search.html', context)
+
 
 
 def product_details(request, id):

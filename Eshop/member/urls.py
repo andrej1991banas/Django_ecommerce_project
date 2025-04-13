@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
 #defining the names for url paths
     path('', views.homepage, name="index" ),
@@ -15,5 +16,6 @@ urlpatterns = [
     path('category', views.navbar_view, name="category"),
     path('test', views.test, name="test"),
     path('search', views.search, name="search"),
+
 
 ]

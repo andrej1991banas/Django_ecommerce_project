@@ -11,6 +11,9 @@ from cart.cart import Cart
 from django.contrib import messages
 from django.db.models import Q
 import json
+from order.forms import ShippingAddressForm
+from order.models import ShippingAddress
+
 
 
 
@@ -82,23 +85,29 @@ def register(request):
 
 
 
-@login_required (login_url="login") #have to be logged in to view the page
+
 def dashboard(request):
-    current_user = request.user
-    current_member = current_user.member
-    orders = current_member.orders.all()  # Fetch all orders for this member
+    # rendering the user profile
+    if request.user.is_authenticated:
+        current_user = request.user
+        current_member = current_user.member
+        orders = current_member.orders.all()  # Fetch all orders for this member
 
-    context = {
-        'username': current_user.username,  # Username
-        'email': current_user.email,  # Email
-        'first_name': current_user.first_name,  # First Name
-        'last_name': current_user.last_name,  # Last Name
-        'location': current_member.location,  # Member's location
-        'phone': current_member.phone_number,
-        'orders': orders,
-    }
-    return render(request, 'user_auth/dashboard.html', context)
+        context = {
+            'username': current_user.username,  # Username
+            'email': current_user.email,  # Email
+            'first_name': current_user.first_name,  # First Name
+            'last_name': current_user.last_name,  # Last Name
+            'country': current_member.country,# Member's location
+            'city': current_member.city,# Member's location
+            'phone_number': current_member.phone_number,
+            'orders': orders,
+        }
+        return render(request, 'user_auth/dashboard.html', context)
 
+    else:
+        messages.success(request, "You must be logged in to access this page")
+        return redirect('index')
 
 @login_required (login_url="login") #have to be logged in to view the page
 def logout(request):
@@ -130,33 +139,61 @@ def test (request):
     return render(request, 'user_auth/test.html', context)
 
 
-@login_required (login_url="login") #have to be logged in to view the page
+
 def update_user(request):
-    #updating the user profile
+    # Updating the user profile
     if request.user.is_authenticated:
-        current_user = User.objects.get(id = request.user.id)
+        # Get the currently logged-in user
+        current_user = request.user
+
+        # Get the logged-in user's Member object (via the OneToOne relationship)
+        try:
+            member = current_user.member  # Access the related Member object
+
+        except Member.DoesNotExist:  # Handle the case where the Member instance doesn't exist
+            messages.error(request, "Member profile not found.")
+            return redirect("dashboard")
+
+        #get current users shipping info
+        shipping_user = ShippingAddress.objects.get(shipping_user=request.user.id)
 
         # Getting the form instance, pre-filled with user data
-        update_form = UpdateUserForm(request.POST or None, instance=current_user) #getting curent info from user to the form
+        update_form = UpdateUserForm(request.POST or None, instance=member) #getting current info from member to the form
+
+        #get users shipping form
+        shipping_form = ShippingAddressForm(request.POST or None, instance=shipping_user)
         if update_form.is_valid():
-            updated_user = update_form.save() #update user first
+            updated_member = update_form.save()
+            # Sync changes back to the `User` model (optional fields like `first_name`, `last_name`, etc.)
+            user = updated_member.user
 
-            # Access the related Member object and update it
-            if hasattr(updated_user, 'member'):  # Check if the User has a related Member
-                member = updated_user.member
-                member.first_name = updated_user.first_name  # Sync first_name with User
-                member.save()  # Save the Member model
-
-
+            # Access the related User model
+            user.first_name = updated_member.first_name
+            user.last_name = updated_member.last_name
+            user.email = updated_member.email
+            user.save()  # Save updates to the User model
             messages.success(request, "Your account has been updated!")
             return redirect("dashboard")
-        return render(request, 'user_auth/update_user.html', {'update_form': update_form})
+
+
+        elif shipping_form.is_valid():
+            shipping_form.save()
+            messages.success(request, "Your shipping address has been updated!")
+            return redirect("dashboard")
+
+        else:
+            # Render the form back with errors if validation fails
+            messages.success(request, "Fill up the missing fields...")
+            return render(request, "user_auth/update_user.html", {"update_form": update_form})
+
+
+        return render(request, 'user_auth/update_user.html', {'update_form': update_form, 'shipping_form': shipping_form})
     else:
         messages.success(request, "You must be logged in to access this page")
         return redirect('index')
 
 
-@login_required (login_url="login") #have to be logged in to view the page
+# @login_required (login_url="login") #have to be logged in to view the page
 def update_password(request):
 
     if request.user.is_authenticated:

@@ -12,44 +12,34 @@
     </div>
 </header>
 
-
-<!-- Display messages -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-<!--&lt;!&ndash; Back to Homepage Link &ndash;&gt;-->
-<!--<div class="container my-4">-->
-<!--  <a class="btn btn-outline-secondary" href="{% url 'index' %}">-->
-<!--    <i class="bi bi-arrow-left"></i> Back to Homepage-->
-<!--  </a>-->
-<!--</div>-->
-
-
+<!-- Display messages with consistent style -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 <!-- Registration Form Section -->
 <div class="container my-5 d-flex justify-content-center">
   <div class="card shadow-lg p-4 w-50">
-    <h2 class="text-center mb-4 text-dark">Update profile</h2>
+    <h2 class="text-center mb-4 text-dark">Update profile with billing information</h2>
     <form method="POST" autocomplete="off" class="needs-validation" novalidate>
       {% csrf_token %}
       {{ update_form.as_p }}
+        <br/>
 
+        <!--        <h5>Billing address details</>h5>-->
+<!-- {% csrf_token %}-->
+<!--        {{ shipping_form.as_p }}-->
 
       <div class="text-center mt-4">
-        <input class="btn btn-primary btn-lg w-100" type="submit" value="Update profile" />
+        <input class="btn btn-outline-success btn-lg"" type="submit" value="Update profile" />
       </div>
     </form>
-      <br/><br/>
-      <a href="{% url 'update-password' %} " class=" btn btn-secondary"> Update Password </a>
-  </div>
+      </div>
 </div>
 {% endblock %}
-
-

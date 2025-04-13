@@ -14,7 +14,7 @@ class Cart:
         if 'session_key' not in request.session:
             cart=self.session['session_key'] = {}
 
-        #make sur cart is available on all paes of site
+        #make sure cart is available on all pages of site
         self.cart=cart
 
 

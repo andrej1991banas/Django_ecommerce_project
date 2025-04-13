@@ -18,7 +18,11 @@
     <div class="row">
         <!-- Product Image -->
         <div class="col-md-6 text-center">
+            {% if product.image %}
             <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.brand }} - {{ product.model }}" />
+            {% else %}
+    <p>No image available</p>
+{% endif %}
         </div>
 
 

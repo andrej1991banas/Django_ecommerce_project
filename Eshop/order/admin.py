@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Order
+
+from .forms import ShippingAddressForm
+from .models import Order, ShippingAddress, OrderItems
 
 
 # Register your models here.
@@ -13,6 +15,7 @@ class OrderAdmin(admin.ModelAdmin):
     def get_product_order(self, obj):
         # Access product from order
         return ",".join([f" {product.brand} {product.model}" for product in obj.products.all()])
+
     def sum_prize(self, obj):
         #access items in order and sum price
         price_get =0
@@ -25,3 +28,5 @@ class OrderAdmin(admin.ModelAdmin):
     sum_prize.short_description = 'Order price'
 
 admin.site.register(Order, OrderAdmin)
+admin.site.register(ShippingAddress)
+admin.site.register(OrderItems)
