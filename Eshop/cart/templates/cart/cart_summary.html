@@ -29,8 +29,8 @@
   <div class="container">
 
       {% if cart_products %}
-            {% for product in cart_products %}
-            <div class="row">
+    {% for product in cart_products %}
+        <div class="row">
             <!-- Product Image -->
             <div class="col-md-6 text-center">
                 <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.brand }} - {{ product.model }}" />
@@ -54,20 +54,23 @@
                 <br>
                 <button type="button" data-index="{{product.id}}"
                         class="btn btn-danger mt-4" id="cart-delete">Remove</button>
-
+                <button type="button" data-index="{{product.id}}"
+                        class="btn btn-warning mt-4" id="#">Update</button>
             </div>
-            </div>
-            <br/>
-            <!--      <br/>-->
-            <!--        {{product}} {{product.price}} <br/>-->
-            {% endfor %}
-      <br/>
-      <h3> Total: €{{ totals }} </h3>
+        </div>
+        <br/>
+    {% endfor %}
 
-      {% else %}
-      <h4>There's nothing in your Shopping Cart... </h4>
-      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-      {% endif %}
+    <br/>
+    <!-- Right-aligned Total -->
+    <div class="text-end">
+        <h3>Total: €{{ totals }}</h3>
+        <a href="{% url 'checkout' %}" class="btn btn-outline-success btn-lg"> Checkout</a>
+    </div>
+{% else %}
+      <p> No products in your shopping cart </p>
+{% endif %}
+
       <div class="row justify-content-center">
 
     </div>

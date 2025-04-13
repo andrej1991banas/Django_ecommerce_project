@@ -28,10 +28,32 @@ class ChangePasswordForm(SetPasswordForm):
 
 
 class UpdateUserForm(UserChangeForm):
+    email = forms.EmailField(label="", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Email Address'}), required=False)
+    first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'First Name'}), required=False)
+    last_name = forms.CharField(label="", max_length=100,
+                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}), required=False)
+    phone_number = forms.CharField(label="", max_length=20,
+                                   widget=forms.TextInput(
+                                       attrs={'class': 'form-control', 'placeholder': 'Phone Number'}), required=False)
+    address1 = forms.CharField(label="", max_length=100,
+                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 1'}), required=False)
+    address2 = forms.CharField(label="", max_length=100,
+                                       widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 2'}), required=False)
+    city = forms.CharField(label="", max_length=100,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}), required=False)
+    state = forms.CharField(label="", max_length=100,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}), required=False)
+    zipcode = forms.CharField(label="", max_length=100,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Zip Code'}), required=False)
+    country = forms.CharField(label="", max_length=100,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}), required=False)
+
     password = None
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name']
+        model = Member
+        fields = ['first_name', 'last_name','email', 'phone_number', 'address1', 'address2', 'city', 'state', 'zipcode', 'country']
 
 
 
@@ -46,8 +68,18 @@ class CreateUserForm(UserCreationForm):
                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
     phone_number = forms.CharField(label="", max_length=100,
                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}))
-    location = forms.CharField(label="", max_length=100,
-                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}))
+    # address1 = forms.CharField(label="", max_length=100,
+    #                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 1'}))
+    # address2 = forms.CharField(label="", max_length=100,
+    #                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 2'}))
+    # city = forms.CharField(label="", max_length=100,
+    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}))
+    # state = forms.CharField(label="", max_length=100,
+    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}))
+    # zipcode = forms.CharField(label="", max_length=100,
+    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Zip Code'}))
+    # country = forms.CharField(label="", max_length=100,
+    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}))
 
     class Meta:
         model = User
@@ -90,7 +122,7 @@ class CreateUserForm(UserCreationForm):
                 first_name=user.first_name,
                 last_name=user.last_name,
                 phone_number=self.cleaned_data.get('phone_number', ''),
-                location=self.cleaned_data.get('location', '').capitalize(),
+
             )
 
         return user

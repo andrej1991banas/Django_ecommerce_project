@@ -1,0 +1,122 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+
+
+<!--Header-->
+
+  <header class="header-bg py-5">
+    <div class="container px-4 px4lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder"> Shopping cart</h1>
+            <p class="lead fw-normal text-white-50 mb-0"> Now checkout your cart </p>
+        </div>
+    </div>
+</header>
+
+<!-- Display messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4 w-50">
+    <div class="card">
+  <div class="card-header">
+    Order Summary
+  </div>
+  <div class="card-body">
+    {% if cart_products %}
+        {% for product in cart_products %}
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">{{ product.brand }}</h5>
+                    <p class="card-text">{{ product.model }}</p>
+                </div>
+                <p class="card-text text-end">{{ product.price }}</p>
+
+            </div>
+       <br/>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Align the button and total to the right -->
+    <div class="text-end mt-4">
+        <h4>Total: €{{ totals }}</h4>
+        <br/> <br/>
+        <a href="{% url 'cart-summary' %}" class="btn btn-sml btn-outline-secondary">Update Your Shopping Cart</a>
+
+    </div>
+
+    <div class="text-end mt-2">
+
+    </div>
+</div>
+</div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4 w-50">
+    <div class="card ">
+       <div class="text-center">
+        <h5><strong>Billing Details and Shipping Details</strong></h5>
+      </div>
+            <div class="card-body">
+    <div class="row">
+  <div class="col-sm-6 mb-3 mb-sm-0">
+    <div class="card">
+      <div class="card-body">
+          <form method="POST" autocomplete="off" class="needs-validation" novalidate>
+
+ {% csrf_token %}
+        {{ shipping_form.as_p }}
+
+
+      <div class="text-center mt-4">
+        <input class="btn btn-primary btn-lg w-100" type="submit" value="Update profile" />
+      </div>
+    </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Align the button and total to the right -->
+    <div class="text-end mt-4">
+        <h4>Total: €{{ totals }}</h4>
+        <br/> <br/>
+        <a href="{% url 'cart-summary' %}" class="btn btn-sml btn-outline-secondary">Update Your Shopping Cart</a>
+
+    </div>
+
+    <div class="text-end mt-2">
+
+    </div>
+</div>
+</div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

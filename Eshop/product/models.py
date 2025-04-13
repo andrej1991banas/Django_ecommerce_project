@@ -23,7 +23,7 @@ class Product(models.Model):
 
 
     def __str__(self):
-        return f'{self.category} {self.brand} {self.model}'
+        return f'{self.brand} {self.model}'
 
 
 
