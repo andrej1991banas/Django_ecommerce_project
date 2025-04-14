@@ -10,10 +10,13 @@ def cart_summary(request):
     #get the Cart
     cart = Cart(request)
     cart_products = cart.get_cart_prods
+    quantities = cart.get_cart_qty
     totals = cart.cart_total()
 
     context = {"cart_products":cart_products,
                "totals": totals,
+               "quantities": quantities,
+
                }
     return render(request, "cart/cart_summary.html", context)
 
@@ -26,11 +29,12 @@ def cart_add(request):
         if request.POST.get('action')=='post':
             #get data from request
             product_id = int(request.POST.get('product_id'))
+            product_qty= int(request.POST.get('product_qty'))
             #lookup for product in DB
             product = get_object_or_404(Product, id=product_id)
 
             #save to session
-            cart.add(product=product)
+            cart.add(product=product, quantity=product_qty)
 
             #get cart quantity
             cart_quantity = cart.__len__()
@@ -43,11 +47,14 @@ def cart_add(request):
         if request.POST.get('action') == 'post':
             # get data from request
             product_id = int(request.POST.get('product_id'))
+            product_qty = int(request.POST.get('product_qty'))
+
             # lookup for product in DB
             product = get_object_or_404(Product, id=product_id)
 
+
             # save to session
-            cart.add(product=product)
+            cart.add(product=product, quantity=product_qty)
 
             # get cart quantity
             cart_quantity = cart.__len__()
@@ -82,4 +89,13 @@ def cart_delete(request):
 
 
 def cart_update(request):
-    pass
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
+
+        cart.update(product=product_id, quantity=product_qty)
+
+        response= JsonResponse({'product':product_id})
+        return response
+

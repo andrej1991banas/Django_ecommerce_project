@@ -50,12 +50,26 @@
                     <strong>Description:</strong> {{ product.description }}
                 </p>
 
-                <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                <select class="form-control text-center me-3" id="select{{product.id}}" style="max-width: 3rem">
+                <div class="col-md-2">Quantity</div>
+                    <option selected>
+                        {% for key,value in quantities.items %}
+                            {% if key == product.id|slugify %}
+                                {{ value }}
+                            {% endif %}
+                        {% endfor %}
+                    </option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
                 <br>
                 <button type="button" data-index="{{product.id}}"
                         class="btn btn-danger mt-4" id="cart-delete">Remove</button>
                 <button type="button" data-index="{{product.id}}"
-                        class="btn btn-warning mt-4" id="#">Update</button>
+                        class="btn btn-warning mt-4" id="cart-update">Update</button>
             </div>
         </div>
         <br/>
@@ -64,7 +78,7 @@
     <br/>
     <!-- Right-aligned Total -->
     <div class="text-end">
-        <h3>Total: €{{ totals }}</h3>
+        <h3>Total: {{ totals }}</h3>
         <a href="{% url 'checkout' %}" class="btn btn-outline-success btn-lg"> Checkout</a>
     </div>
 {% else %}
@@ -83,32 +97,58 @@
 <!--    class="btn btn-outline-secondary mt-4 update-cart">Update</button>-->
 
 <script>
-$(document).on('click', '#cart-delete', function(e){
+    // Handle Cart Update
+    $(document).on('click', '#cart-update', function (e) {
+        e.preventDefault();
 
-    e.preventDefault();
-    $.ajax({
-        type: 'POST',
-        url: "{% url 'cart-delete' %}",
-        data: {
-            product_id: $(this).data('index'),
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            action: 'post'
-        },
-        success: function(json){
-            console.log(json)
-<!--    i dont really need line above         -->
-            document.getElementById("cart_quantity").
-                textContent = json.qty
-                location.reload();
+        // Get the product ID
+        var productid = $(this).data('index');
+        var quantity = $('#select' + productid + ' option:selected').text();
+
+        // Perform AJAX request to update the cart
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart-update' %}",
+            data: {
+                product_id: productid,
+                product_qty: quantity,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
             },
-
-            error: function(xhr, errmsg, err){
+            success: function (json) {
+                location.reload(); // Reload the page after successful update
+            },
+            error: function (xhr, errmsg, err) {
+                console.log("Error updating cart:", errmsg);
             }
-
+        });
     });
 
-    })
+    // Handle Cart Delete
+    $(document).on('click', '#cart-delete', function (e) {
+        e.preventDefault();
 
+        var productid = $(this).data('index');
+
+        // Perform AJAX request to delete the product from the cart
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart-delete' %}",
+            data: {
+                product_id: productid,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function (json) {
+                // Update the cart quantity displayed on the page
+                document.getElementById("cart_quantity").textContent = json.qty;
+                location.reload(); // Reload the page after successful delete
+            },
+            error: function (xhr, errmsg, err) {
+                console.log("Error deleting from cart:", errmsg);
+            }
+        });
+    });
 </script>
 
 {% endblock %}

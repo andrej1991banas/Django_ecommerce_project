@@ -18,15 +18,16 @@ class Cart:
         self.cart=cart
 
 
-    def db_add(self, product):
+    def db_add(self, product, quantity):
         product_id = str(product.id)
-        # product_qty = str(quantity)
+        product_qty = str(quantity)
 
         # logic
         if product_id in self.cart:
             pass
         else:
-            self.cart[product_id] = {'price': str(product.price)}
+            # self.cart[product_id] = {'price': str(product.price)}
+            self.cart[product_id] = int(product_qty)
 
         self.session.modified = True
 
@@ -41,16 +42,17 @@ class Cart:
             current_profile.update(old_cart=str(carty))
 
 
-    def add(self, product):
+    def add(self, product, quantity ):
         product_id= str(product.id)
-        # product_qty = str(quantity)
+        product_qty = str(quantity)
 
 
     #logic
         if product_id in self.cart:
             pass
         else:
-            self.cart[product_id]= {'price': str(product.price)}
+            # self.cart[product_id]= {'price': str(product.price)}
+            self.cart[product_id] = int(product_qty)
 
         self.session.modified = True
 
@@ -82,6 +84,23 @@ class Cart:
         return products
 
 
+    def update(self, product, quantity):
+        product_id = str(product)
+        product_qty = int(quantity)
+
+        #get the actual cart
+        act_cart= self.cart
+
+        #update dict/cart
+        act_cart[product_id]= product_qty
+
+        self.session.modified = True
+        updated_cart = self.cart
+
+        return updated_cart
+
+
+
     def delete(self, product):
         product_id = str(product)
         #delete from dict/cart
@@ -101,28 +120,28 @@ class Cart:
 
 
     def cart_total(self):
-        #get product IDs
+        # Get product IDs from the cart (keys of the dictionary)
         products_ids = self.cart.keys()
+        # Query database for the corresponding products
         products = Product.objects.filter(id__in=products_ids)
-        price_total = self.cart
+
         #start counting from 0
         total = 0
         items_price = 0
-        for key in price_total:
+        for key in products:
             for product in products:
-                if int(key) == product.id:
-                    # Remove euro symbol from the string
-                    price_int = price_total[key]['price'].replace('€', '')
-                    # Remove thousands separators
-                    price_int2 = price_int.replace(',', '')
-                    # Convert the cleaned string to a float
-                    try:
-                        price = float(price_int2)
-                    except ValueError:
-                        raise ValueError(f"Invalid price value: {price_int}")
+                # The quantity of the current product in the cart
+                product_id_str = str(product.id)  # Convert product ID to match dictionary keys
+                if product_id_str in self.cart:
+                    quantity = self.cart[product_id_str]  # Get the quantity
 
-                    # Try work with Django MOneyField
-                    # item_price = product.price.amount
-                    # items_price += item_price
-                    total += price
-        return total
+                    # Multiply product price by quantity
+                    total += product.price * quantity
+
+            return total
+
+
+
+    def get_cart_qty(self):
+        quantities= self.cart
+        return quantities
