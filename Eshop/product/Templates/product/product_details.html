@@ -39,14 +39,23 @@
             <p>
                 <strong>Description:</strong> {{ product.description }}
             </p>
+            <select class="form-control text-center me-3" id="inputQuantity" style="max-width: 3rem">
+                <div class="col-md-2">Quantity</div>
 
-            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+
             <br>
             <a href="{% url 'show-products' %}" class="btn btn-outline-secondary mt-4">
                 <i class="bi bi-arrow-left"></i> Back to Product List
             </a>
             <p> ID: {{product.id}}</p>
             <button type="button" value="{{product.id}}" class="btn btn-outline-secondary mt-4" id="add-cart"> Add to cart</button>
+
         </div>
     </div>
 </div>
@@ -62,6 +71,7 @@
         url: "{% url 'cart-add' %}",
         data: {
             product_id: $('#add-cart').val(),
+            product_qty: $('#inputQuantity option:selected').text(),
             csrfmiddlewaretoken: '{{ csrf_token }}',
             action: 'post'
         },

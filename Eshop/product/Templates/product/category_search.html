@@ -65,6 +65,7 @@
             url: "{% url 'cart-add' %}",
             data: {
                 product_id: productId,
+                product_qty: 1,
                 action: 'post'
             },
             success: function(json) {

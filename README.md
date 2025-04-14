@@ -6,33 +6,153 @@
 
 ## Description
 
-[Flyfishing Ecommerce] is a Django-based web application that provides basic funcionalities for users (register, log in, log out, password managment, updating profiles, store data in db), Cart managment updating shopping cart, deleting and adding new items, cart persistance for logged users or add items to users cart after log in into account. CRUD operations for products, category selection, using AI client to handle create decsription for products. Seach line for users to use easy search for products.  
+**Flyfishing Ecommerce** is a Django-based web application that demonstrates backend and frontend development skills. The project simulates a real-world ecommerce application featuring:
 
-This project aims to demonstrate my skills in backend and frontend software or webapp develompment. Focus on real time scenario situations, data colecting demands and user friendly enviroment.
+- User registration, authentication, and profile management.
+- Data storage, retrieval, and CRUD operations for Users, members, products and categories.
+- Shopping cart functionality (with persistence for logged-in users).
+- Integration of AI (used to generate product descriptions dynamically).
+- Product search functionality and responsive UI design
+
+This project showcases practical experience in handling **real-time scenarios**, collecting **data-driven demands**, and creating a **user-friendly environment**.
 
 ## Features
 
-- User authentication (login, logout, registration)
-- User updates, password managment
-- Product management (add, edit, delete products)
-- Add product with AI client to create description for products automaticaly
-- Shopping cart functionality
-- Shopping card persistence after or before log in
-- Responsive design with Bootstrap
-- [Add more features specific to your project]
+- **Authentication System**:
+  - User login and logout.
+  - Registration with email validation.
+  - Password management & user profile updates.
+- **Product Management**:
+  - Add, edit, and delete products and categories (CRUD operations).
+  - Category-wise product filtering using dynamic dropdowns.
+  - AI-assisted automatic product description generation.
+- **Shopping Cart**:
+  - Add/update/delete products from the cart.
+  - Persistence: remembers the cart across sessions.
+  - Updated cart summary for logged-in and guest users.
+  - Cart total and product listing for easy checkout.
+- **Frontend Design**:
+  - Fully responsive and built using **Bootstrap**.
+  - Dynamic navigation system based on product categories.
+- **Other Features**:
+  - Product details page.
+  - Empty cart and category-specific fallbacks.
+  - Secure redirections when accessing logged-in user resources (e.g., dashboards).
+  - Search bar functionality to quickly find products.
+
+---
+
+### 1. **Model Testing**
+- Ensures correctness of models like `User`, `Member`, `Category`, and `Product`.
+- Verifies the `create`, `read`, `update`, and `delete` operations for all models.
+- Tests string representations (`__str__`) for clarity in admin panels.
+
+### 2. **View Testing**
+- Confirms HTTP status codes (e.g., 200 OK, 404 Not Found, or 302 Redirect) for several views including:
+  - Homepage (`/index`)
+  - Category search (`/category/<id>`)
+  - Product details (`/product/<id>`)
+  - Cart summary (`/cart-summary`)
+- Validates rendered content such as buttons, titles, links, or category items using `assertContains`.
+
+### 3. **Cart Functionality**
+- Tests cart-related logic and ensures:
+  - Products can be added and deleted from the cart.
+  - The correct cart total is calculated.
+  - The cart allows for user sessions and product persistency.
+
+### 4. **Authentication Flow**
+- Verifies redirections for unauthenticated users attempting to access sensitive pages:
+  - Dashboard (`/dashboard`)
+  - Update profile (`/update-user`)
+  - Password update (`/update-password`)
+- Confirms that error messages and redirects function as expected.
+
+### 5. **Category Search**
+- Tests dynamic dropdowns and category links.
+- Ensures correct product listings and filters are returned for each selected category.
+- Handles empty or non-existent categories gracefully (e.g., fallback messages or 404 views).
+
+Here is a snippet of some Main Test Cases:
+
+#### Example: Testing Product Details
+```python
+def test_product_details(self):
+    """Test rendering of product details based on their id."""
+    url = reverse('product-details', args=[1])
+    response = self.client.get(url)
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'Fly Rod A')  # Ensures correct product renders
+```
 
 ## Requirements
 
-- Python 3.8 or higher
-- Django 4.2 or higher
-- PostgreSQL (or specify your database, e.g., SQLite for development)
-- For other dependecies see the Requirements.txt
+- **Python**: Version 3.8 or higher.
+- **Framework**: Django 4.2 or higher.
+- **Database**: PostgreSQL (SQLite can be used for local development).
+- Other dependencies you can install via `Requirements.txt`.
+
+
 
 ## Installation
 
 Follow these steps to set up the project locally:
 
-1. **Clone the repository**:
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/andrej1991banas/Django_ecommerce_project.git
    cd Django_ecommerce_project
+   ```
+
+2. **Create a Virtual Environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # For Windows: venv\Scripts\activate
+   ```
+
+3. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set Up Database**:
+   - Modify `DATABASES` in your `settings.py` if needed.
+   - Migrate the tables:
+     ```bash
+     python manage.py migrate
+     ```
+
+5. **Run Tests** (Optional):
+   ```bash
+   python manage.py test
+   ```
+
+6. **Run the Development Server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+   Navigate to `http://127.0.0.1:8000/`.
+
+---
+
+
+## Future Enhancements
+
+- Add a **Payment Gateway** (e.g., PayPal or Stripe).
+- Add a **Recommendation Engine** using ML to suggest similar products.
+- Enable newsletter subscription feature.
+- Provide Admin Analytics Dashboard for sales tracking.
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Author
+
+- **Andrej Banas**: Backend & frontend developer passionate about building scalable, user-friendly applications.
