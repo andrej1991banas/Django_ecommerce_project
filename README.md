@@ -73,6 +73,9 @@ This project showcases practical experience in handling **real-time scenarios**,
 - Ensures correct product listings and filters are returned for each selected category.
 - Handles empty or non-existent categories gracefully (e.g., fallback messages or 404 views).
 
+All test cases can be found in eshop/test - Unittest, eshop/test/tests_selenium - test cases with Selenium, eshop/test/tests_playwright - test cases with Playwright
+All screenshots for test cases from the client can be found in eshop/test/tests_screenshots
+
 Here is a snippet of some Main Test Cases:
 
 #### Example: Testing Product Details
@@ -105,7 +108,7 @@ Follow these steps to set up the project locally:
    cd Django_ecommerce_project
    ```
 
-2. **Create a Virtual Environment**:
+2. **Create a Virtual Environment (if required)**:
    ```bash
    python -m venv venv
    source venv/bin/activate  # For Windows: venv\Scripts\activate
@@ -141,7 +144,7 @@ Follow these steps to set up the project locally:
 ## Future Enhancements
 
 - Add a **Payment Gateway** (e.g., PayPal or Stripe).
-- Add a **Recommendation Engine** using ML to suggest similar products.
+- Add a **Imagine Engine** for creating product images with AI tool ComfyUI
 - Enable newsletter subscription feature.
 - Provide Admin Analytics Dashboard for sales tracking.
 
