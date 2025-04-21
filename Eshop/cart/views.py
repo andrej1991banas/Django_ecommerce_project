@@ -16,7 +16,6 @@ def cart_summary(request):
     context = {"cart_products":cart_products,
                "totals": totals,
                "quantities": quantities,
-
                }
     return render(request, "cart/cart_summary.html", context)
 
@@ -96,6 +95,6 @@ def cart_update(request):
 
         cart.update(product=product_id, quantity=product_qty)
 
-        response= JsonResponse({'product':product_id})
+        response= JsonResponse({'product':product_id, 'quantity':product_qty})
         return response
 

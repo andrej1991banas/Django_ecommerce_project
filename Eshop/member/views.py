@@ -31,7 +31,7 @@ def homepage(request):
 def login(request):
     form= LoginForm()
 
-    if request.method=='POST':
+    if request.method=="POST":
         form = LoginForm(request, data=request.POST)
 
         if form.is_valid():
@@ -45,15 +45,15 @@ def login(request):
                 current_user = Member.objects.get(user__id= request.user.id)
                 #get data from saved cart tangled to the user
                 saved_cart = current_user.old_cart
-                #convert db string to dict, old_cart (str)
+
                 if saved_cart:
                     #convert to dict with JSON
                     converted_cart = json.loads(saved_cart) #from str to dict
 
                     #add loaded dict to cart_session
                     cart = Cart(request)
-                    for key in converted_cart.keys():
-                        cart.db_add(product=Product.objects.get(id=key))
+                    for key,value in converted_cart.items():
+                        cart.db_add(product=key, quantity=value)
 
                 messages.success(request, "Welcome, you successfully logged in!")
                 return redirect("dashboard")
@@ -67,21 +67,24 @@ def login(request):
 
 
 def register(request):
-    if request.method=="POST":
-        form = CreateUserForm(request.POST)#builtin form for create user
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)  # Bind POST data to the form
         if form.is_valid():
-            form.save() #validating the values of inputs
-            messages.success(request, "Your account has been created!")
+            # Save the user (and the related Member) via the custom save() method
+            form.save()
+            messages.success(request, "Your account has been created successfully!")
             return redirect("login")
+        else:
+            # Add messages for form errors
+            for error in form.errors.values():
+                messages.error(request, error)
+
     else:
         form = CreateUserForm()
-        for error in list(form.errors.items()):
-            messages.error(request, error[1])
-            return redirect("register")
 
-    context= {'registerform':form}
-
-    return render(request, 'user_auth/register.html', context=context)
+    # Render the registration form page
+    context = {"registerform": form}
+    return render(request, "user_auth/register.html", context)
 
 
 
@@ -111,9 +114,11 @@ def dashboard(request):
 
 @login_required (login_url="login") #have to be logged in to view the page
 def logout(request):
-    auth.logout(request) #creating request for HTML file to apply logout
-    messages.success(request, f"You logged out successfully!")
+
+    auth.logout(request)
+    messages.success(request, "You logged out successfully!")
     return redirect("index")
+
 
 def about(request):
     return render(request, 'user_auth/about.html')
@@ -129,19 +134,8 @@ def navbar_view(request):
     return render(request, 'user_auth/navbar.html', context)
 
 
-def test (request):
-    #testing page
-    categories = Category.objects.all()  # Query all categories
-    context = {
-        'categories': categories,  # Pass categories to the template
-    }
-
-    return render(request, 'user_auth/test.html', context)
-
-
 
 def update_user(request):
-    # Updating the user profile
     if request.user.is_authenticated:
         # Get the currently logged-in user
         current_user = request.user
@@ -149,48 +143,68 @@ def update_user(request):
         # Get the logged-in user's Member object (via the OneToOne relationship)
         try:
             member = current_user.member  # Access the related Member object
-
-        except Member.DoesNotExist:  # Handle the case where the Member instance doesn't exist
+        except Member.DoesNotExist:
             messages.error(request, "Member profile not found.")
             return redirect("dashboard")
 
-        #get current users shipping info
-        shipping_user = ShippingAddress.objects.get(shipping_user=request.user.id)
+        # Get current user's shipping info
+        try:
+            shipping_user = ShippingAddress.objects.get(shipping_user=request.user.id)
+        except ShippingAddress.DoesNotExist:
+            messages.error(request, "Shipping address not found.")
+            return redirect("dashboard")
 
-        # Getting the form instance, pre-filled with user data
-        update_form = UpdateUserForm(request.POST or None, instance=member) #getting current info from member to the form
-
-        #get users shipping form
+        # Initialize UpdateUserForm (for profile details)
+        update_form = UpdateUserForm(request.POST or None, instance=member)
+        # Initialize ShippingAddressForm (for shipping address details)
         shipping_form = ShippingAddressForm(request.POST or None, instance=shipping_user)
-        if update_form.is_valid():
-            updated_member = update_form.save()
-            # Sync changes back to the `User` model (optional fields like `first_name`, `last_name`, etc.)
-            user = updated_member.user
 
-            # Access the related User model
-            user.first_name = updated_member.first_name
-            user.last_name = updated_member.last_name
-            user.email = updated_member.email
-            user.save()  # Save updates to the User model
-            messages.success(request, "Your account has been updated!")
-            return redirect("dashboard")
+        # Flags to track successful updates
+        user_updated = False
+        shipping_updated = False
 
+        # Handle form POST requests
+        if request.method == "POST":
+            # 1. Update the Member/User information
+            if update_form.is_valid():
+                # Save changes to `Member` model
+                updated_member = update_form.save()
 
-        elif shipping_form.is_valid():
-            shipping_form.save()
-            messages.success(request, "Your shipping address has been updated!")
-            return redirect("dashboard")
+                # Explicitly sync Member fields to User model fields
+                user = updated_member.user
+                user.first_name = updated_member.first_name
+                user.last_name = updated_member.last_name
+                user.email = updated_member.email
+                user.save()  # Save User model updates
+                user_updated = True  # Indicate successful update
 
-        else:
-            # Render the form back with errors if validation fails
-            messages.success(request, "Fill up the missing fields...")
-            return render(request, "user_auth/update_user.html", {"update_form": update_form})
+            # 2. Update the shipping address
+            if shipping_form.is_valid():
+                shipping_form.save()
+                shipping_updated = True  # Indicate successful update
 
+            # Provide success message depending on the forms updated
+            if user_updated and shipping_updated:
+                messages.success(request, "Your account and shipping address have been updated!")
+            elif user_updated:
+                messages.success(request, "Your account has been updated!")
+            elif shipping_updated:
+                messages.success(request, "Your account has been updated!")
+            else:
+                messages.error(request, "No changes were made. Please correct the errors below.")
 
-        return render(request, 'user_auth/update_user.html', {'update_form': update_form, 'shipping_form': shipping_form})
+        # Render the form template with a proper context (GET or POST)
+        return render(request, "user_auth/update_user.html", {
+            "update_form": update_form,
+            "shipping_form": shipping_form
+        })
+
     else:
-        messages.success(request, "You must be logged in to access this page")
-        return redirect('index')
+        messages.error(request, "You must be logged in to access this page")
+        return redirect("index")
+
+
+
 
 
 # @login_required (login_url="login") #have to be logged in to view the page
@@ -204,12 +218,10 @@ def update_password(request):
             if form.is_valid():
                 form.save()
                 messages.success(request, "Your password has been updated! Please log in again")
-                login(request, current_user)
                 return redirect("login")
             else:
-                for error in list(form.errors.items()):
-                    messages.error(request, error[1])
-                    return redirect("update-password")
+                messages.success(request, "You have to use matching passwords")
+                return redirect("update-password")
 
         else:
             form= ChangePasswordForm(request.user)
@@ -230,13 +242,18 @@ def search(request):
         #conditions  for no result
         if not searched:
             messages.success(request, "Please, try your search again")
-            return render(request, 'user_auth/index.html', {
-                'searched': []
-            })
+            return render(request, 'user_auth/index.html', {})
 
         else:
             return render(request, 'user_auth/search.html', {'searched': searched})
     else:
-        return render(request, 'user_auth/search.html', {})
+        messages.success(request, "Please, try your search again")
+        return render(request, 'product/show_products.html', {})
 
 
+def delete_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        current_user.delete()
+        messages.success(request, "Your account has been deleted!")
+        return redirect("index")

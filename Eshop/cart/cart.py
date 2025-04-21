@@ -19,7 +19,7 @@ class Cart:
 
 
     def db_add(self, product, quantity):
-        product_id = str(product.id)
+        product_id = str(product)
         product_qty = str(quantity)
 
         # logic
@@ -29,30 +29,28 @@ class Cart:
             # self.cart[product_id] = {'price': str(product.price)}
             self.cart[product_id] = int(product_qty)
 
-        self.session.modified = True
+        self.session.modified = True  # Mark the session as modified
 
-        # deal with logged-in user
+        # Save the updated cart to the database for logged-in users
         if self.request.user.is_authenticated:
-            # get current user profile
             current_profile = Member.objects.filter(user__id=self.request.user.id)
             carty = str(self.cart)
-            carty = carty.replace("\'", "\"")
-
-            # save our variable "carty" into Member model
+            carty = carty.replace("\'", "\"")  # Convert single quotes to double quotes for valid JSON
             current_profile.update(old_cart=str(carty))
+
+            self.request.user.member.save()
 
 
     def add(self, product, quantity ):
         product_id= str(product.id)
-        product_qty = str(quantity)
+        product_qty = quantity
 
-
-    #logic
+        #logic
         if product_id in self.cart:
             pass
         else:
             # self.cart[product_id]= {'price': str(product.price)}
-            self.cart[product_id] = int(product_qty)
+            self.cart[product_id] = product_qty
 
         self.session.modified = True
 
@@ -65,12 +63,12 @@ class Cart:
 
             #save our variable "carty" into Member model
             current_profile.update(old_cart=str(carty))
-
             self.request.user.member.save()
 
 
     def __len__(self):
         return len(self.cart)
+
 
 
     def get_cart_prods(self):
@@ -84,19 +82,28 @@ class Cart:
         return products
 
 
+
     def update(self, product, quantity):
         product_id = str(product)
         product_qty = int(quantity)
 
-        #get the actual cart
-        act_cart= self.cart
+        # get the actual cart
+        act_cart = self.cart
 
-        #update dict/cart
-        act_cart[product_id]= product_qty
+        # update dict/cart
+        act_cart[product_id] = product_qty
 
         self.session.modified = True
-        updated_cart = self.cart
 
+        if self.request.user.is_authenticated:
+            #get current user profile
+            current_profile = Member.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty= carty.replace("\'", "\"")
+            #save our variable "carty" into Member model
+            current_profile.update(old_cart=str(carty))
+
+        updated_cart = self.cart
         return updated_cart
 
 
@@ -138,7 +145,7 @@ class Cart:
                     # Multiply product price by quantity
                     total += product.price * quantity
 
-            return total
+        return total
 
 
 

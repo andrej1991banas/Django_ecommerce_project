@@ -311,17 +311,16 @@ class CartTestCase(TestCase):
 
     def test_add_product_to_cart(self):
         """Test adding a product to the cart."""
-        self.cart.add(self.product_1)  # Add product to the cart
+        self.cart.add(self.product_1,1)  # Add product to the cart
         products = list(self.cart.get_cart_prods())
         self.assertIn(str(self.product_1.id), self.cart.cart)  # Verify product is in the cart
         self.assertEqual(len(self.cart), 1)  # Verify cart size is now 1
-        self.assertEqual(self.cart.cart[str(self.product_1.id)]['price'],str(self.product_1.price))  # Verify price is correct
         self.assertIn(self.product_1, products)  # Ensure product1 is in the fetched list
 
 
     def test_delete_product_from_cart(self):
         """Test deleting a product from the cart."""
-        self.cart.add(self.product_3)  # Add product
+        self.cart.add(self.product_3, 3)  # Add product
         self.assertIn(str(self.product_3.id), self.cart.cart) #expect and test if the product_3 is in the cart
         self.cart.delete(self.product_3.id)  # Delete product
         self.assertNotIn(str(self.product_3.id), self.cart.cart)  # Verify product is removed
@@ -330,8 +329,8 @@ class CartTestCase(TestCase):
 
     def test_get_cart_products(self):
         """Test fetching products from the cart."""
-        self.cart.add(self.product_4)  # Add products to cart
-        self.cart.add(self.product_2)
+        self.cart.add(self.product_4,2)  # Add products to cart
+        self.cart.add(self.product_2,1)
         products = list(self.cart.get_cart_prods())
         self.assertEqual(len(products), 2)  # Verify 2 products are fetched
         self.assertIn(self.product_4, products)  # Ensure product1 is in the fetched list
@@ -340,10 +339,11 @@ class CartTestCase(TestCase):
 
     def test_cart_total(self):
         """Test the cart total calculation."""
-        self.cart.add(self.product_1)  # Add products to cart
-        self.cart.add(self.product_2)
+        self.cart.add(self.product_1, 2)  # Add products to cart
+
+        self.cart.add(self.product_2, 3)
         total = self.cart.cart_total()  # Calculate total
-        self.assertEqual(total, 310)  # Verify total calculation for price is correct
+        self.assertEqual(total.amount, 1640)  # Verify total calculation for price is correct
 
 
     def test_empty_cart(self):

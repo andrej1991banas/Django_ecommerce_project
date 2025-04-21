@@ -33,19 +33,26 @@
     Order Summary
   </div>
   <div class="card-body">
-    {% if cart_products %}
+
         {% for product in cart_products %}
             <div class="d-flex justify-content-between">
                 <div>
                     <h5 class="card-title">{{ product.brand }}</h5>
                     <p class="card-text">{{ product.model }}</p>
                 </div>
+                <p> Quantity:
+                {% for key, value in quantities.items %}
+                   {% if key == product.id|slugify %}
+                {{ value}}
+                {% endif %}
+                {% endfor %}</p>
+
                 <p class="card-text text-end">{{ product.price }}</p>
 
             </div>
        <br/>
         {% endfor %}
-    {% endif %}
+
 
     <!-- Align the button and total to the right -->
     <div class="text-end mt-4">
@@ -76,15 +83,18 @@
   <div class="col-sm-6 mb-3 mb-sm-0">
     <div class="card">
       <div class="card-body">
-          <form method="POST" autocomplete="off" class="needs-validation" novalidate>
+          <form method="POST" action= "{% url 'billing-info' %}" autocomplete="off" class="needs-validation" novalidate>
 
  {% csrf_token %}
         {{ shipping_form.as_p }}
 
 
-      <div class="text-center mt-4">
-        <input class="btn btn-primary btn-lg w-100" type="submit" value="Update profile" />
-      </div>
+      <div class="text-end mt-4">
+
+        <br/> <br/>
+        <button type="submit"  class="btn btn-outline-secondary mt-4" >Continue To Billing ...</button>
+
+    </div>
     </form>
       </div>
     </div>
@@ -104,7 +114,7 @@
     <div class="text-end mt-4">
         <h4>Total: {{ totals }}</h4>
         <br/> <br/>
-        <a href="{% url 'cart-summary' %}" class="btn btn-sml btn-outline-secondary">Update Your Shopping Cart</a>
+        <button type="submit"  class="btn btn-outline-secondary mt-4" >Continue To Billing ...</button>
 
     </div>
 
