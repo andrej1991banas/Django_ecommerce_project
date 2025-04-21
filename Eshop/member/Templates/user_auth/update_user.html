@@ -1,4 +1,4 @@
-{% extends 'user_auth/base.html' %}
+ {% extends 'user_auth/base.html' %}
 
 {% block content %}
 <!--Header-->
@@ -32,13 +32,13 @@
       {{ update_form.as_p }}
         <br/>
 
-        <!--        <h5>Billing address details</>h5>-->
-<!-- {% csrf_token %}-->
-<!--        {{ shipping_form.as_p }}-->
+                <h5>Billing address details</h5>
+ {% csrf_token %}
+        {{ shipping_form.as_p }}
 
       <div class="text-center mt-4">
-        <input class="btn btn-outline-success btn-lg"" type="submit" value="Update profile" />
-      </div>
+  <input id="update-profile" class="btn btn-outline-success btn-lg" type="submit" value="Update profile" />
+</div>
     </form>
       </div>
 </div>

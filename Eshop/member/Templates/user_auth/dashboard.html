@@ -2,111 +2,120 @@
 
 {% block content %}
 
-<!-- Display messages -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
+<!-- Display Messages -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 <section class="py-4">
-    <!-- Use full-width container -->
+    <!-- Profile Section -->
     <div class="container-fluid px-4 py-4">
         <div class="row gx-4 gx-lg-5">
             <div class="col-md-8 mx-auto">
-
-                <!-- First Card -->
                 <div class="row">
                     <div class="col-12 d-flex justify-content-center">
                         <div class="card w-75">
                             <div class="card-body">
                                 <h5 class="card-title">Profile: {{ first_name }} {{ last_name }}</h5>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <dl class="row mb-0">
-                                        <dt class="col-sm-3">Username:</dt>
-                                        <dd class="col-sm-9">{{ username }}</dd>
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-3">Username:</dt>
+                                    <dd class="col-sm-9">{{ username }}</dd>
 
-                                        <dt class="col-sm-3">Email:</dt>
-                                        <dd class="col-sm-9">{{ email }}</dd>
+                                    <dt class="col-sm-3">Email:</dt>
+                                    <dd class="col-sm-9">{{ email }}</dd>
 
-                                        <dt class="col-sm-3">Country:</dt>
-                                        <dd class="col-sm-9">{{ country }}</dd>
+                                    <dt class="col-sm-3">Country:</dt>
+                                    <dd class="col-sm-9">{{ country }}</dd>
 
-                                        <dt class="col-sm-3">City:</dt>
-                                        <dd class="col-sm-9">{{ city }}</dd>
+                                    <dt class="col-sm-3">City:</dt>
+                                    <dd class="col-sm-9">{{ city }}</dd>
 
-                                        <dt class="col-sm-3">Phone:</dt>
-                                        <dd class="col-sm-9">{{ phone_number }}</dd>
-                                    </dl>
+                                    <dt class="col-sm-3">Phone:</dt>
+                                    <dd class="col-sm-9">{{ phone_number }}</dd>
+                                </dl>
+
+                                <!-- Profile Actions -->
+                                <div class="d-flex justify-content-start gap-3 mt-3">
+                                    <a href="{% url 'update' %}" id="Update" class="btn btn-outline-success btn-lg">Update Profile</a>
+                                    <a href="{% url 'update-password' %}" id="Update-password" class="btn btn-outline-warning btn-lg">Update Password</a>
+                                    <button id="delete-account" class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        Delete Account
+                                    </button>
                                 </div>
-
-                                <!-- Buttons -->
-                                <div class="d-flex justify-content-start gap-3">
-                                    <a href="{% url 'update' %}" class="btn btn-outline-success btn-lg">
-        Update Profile
-    </a>
-    <a href="{% url 'update-password' %}" class="btn btn-outline-warning btn-lg">
-        Update Password
-    </a>
-    <a href="#" class="btn btn-outline-danger btn-lg">Delete Account</a>
-
-</div>
-
-                                <!-- Logout Button -->
+                            <!-- Logout Button -->
                                 <div class="text-center mt-5">
-                                    <a href="{% url 'logout' %}" class="btn btn-outline-dark btn-lg">
+                                    <a href="{% url 'logout' %}" id="Logout" class="btn btn-outline-dark btn-lg">
         <i class="bi-box-arrow-right me-1"></i>Logout</a>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Second Card -->
+                <!-- Account Deletion Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Confirm Account Deletion</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete your account? This action cannot be undone!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <a href="{% url 'delete-user' %}" class="btn btn-danger">Delete</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Orders Section -->
                 <div class="row mt-4">
                     <div class="col-12 d-flex justify-content-center">
                         <div class="card w-75">
                             <div class="card-body">
-                                <!-- Orders Section -->
                                 <div class="mt-5">
                                     <h3 class="fw-bolder mb-3">Your Orders</h3>
                                     {% if orders %}
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Order ID</th>
-                                                    <th>Date</th>
-                                                    <th>Products</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for order in orders %}
-                                                <tr>
-                                                    <td>{{ order.pk }}</td>
-                                                    <td>{{ order.created_at|date:"F d, Y" }}</td>
-                                                    <td>
-                                                        {% for product in order.products.all %}
-                                                        {{ product.model }} {{ product.brand }}{% if not forloop.last %}, {% endif %}
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order ID</th>
+                                                        <th>Date</th>
+                                                        <th>Products</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for order in orders %}
+                                                    <tr>
+                                                        <td>{{ order.pk }}</td>
+                                                        <td>{{ order.created_at|date:"F d, Y" }}</td>
+                                                        <td>
+                                                            {% for product in order.products.all %}
+                                                                {{ product.model }} {{ product.brand }}{% if not forloop.last %}, {% endif %}
+                                                            {% endfor %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     {% else %}
-                                    <p class="text-muted">You have no orders yet.</p>
+                                        <p class="text-muted">You have no orders yet.</p>
                                     {% endif %}
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -116,7 +125,5 @@
         </div>
     </div>
 </section>
-
-
 
 {% endblock %}

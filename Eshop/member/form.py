@@ -37,24 +37,40 @@ class UpdateUserForm(UserChangeForm):
     phone_number = forms.CharField(label="", max_length=20,
                                    widget=forms.TextInput(
                                        attrs={'class': 'form-control', 'placeholder': 'Phone Number'}), required=False)
-    address1 = forms.CharField(label="", max_length=100,
-                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 1'}), required=False)
-    address2 = forms.CharField(label="", max_length=100,
-                                       widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 2'}), required=False)
     city = forms.CharField(label="", max_length=100,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}), required=False)
-    state = forms.CharField(label="", max_length=100,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}), required=False)
-    zipcode = forms.CharField(label="", max_length=100,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Zip Code'}), required=False)
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
+                           required=False)
+
+    GENDER_CHOICES = [
+        ("", "Select Gender"),  # Empty option for placeholder
+        ("male", "Male"),
+        ("female", "Female"),
+        ("other", "Other")
+    ]
+
+    gender = forms.ChoiceField(
+        label="",choices=GENDER_CHOICES,widget=forms.Select(attrs={'class': 'form-control'}),required=False)
     country = forms.CharField(label="", max_length=100,
                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}), required=False)
 
     password = None
     class Meta:
         model = Member
-        fields = ['first_name', 'last_name','email', 'phone_number', 'address1', 'address2', 'city', 'state', 'zipcode', 'country']
+        fields = ['first_name', 'last_name','email', 'phone_number', 'city', 'gender', 'country']
 
+    def save(self, commit=True):
+        member = super().save(commit=False)
+
+        # Explicitly update fields on the related User model
+        user = member.user
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.email = self.cleaned_data['email']
+        if commit:
+            member.save()  # Save Member model
+            user.save()  # Save User model
+
+        return member
 
 
 #create and register the user
@@ -68,22 +84,10 @@ class CreateUserForm(UserCreationForm):
                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
     phone_number = forms.CharField(label="", max_length=100,
                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}))
-    # address1 = forms.CharField(label="", max_length=100,
-    #                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 1'}))
-    # address2 = forms.CharField(label="", max_length=100,
-    #                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address 2'}))
-    # city = forms.CharField(label="", max_length=100,
-    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}))
-    # state = forms.CharField(label="", max_length=100,
-    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}))
-    # zipcode = forms.CharField(label="", max_length=100,
-    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Zip Code'}))
-    # country = forms.CharField(label="", max_length=100,
-    #                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}))
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'phone_number']
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)

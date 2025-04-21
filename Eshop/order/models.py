@@ -9,7 +9,8 @@ from django.db.models.signals import post_save
 class Order(models.Model):
     member = models.ManyToManyField(Member, related_name='orders', blank=True)
     products = models.ManyToManyField(Product, related_name='orders', blank=True)
-    full_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
     shipping_address = models.TextField(max_length=1500)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
@@ -38,7 +39,8 @@ class OrderItems(models.Model):
 
 class ShippingAddress (models.Model):
     shipping_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shipping_address')
-    shipping_full_name = models.CharField(max_length=255)
+    shipping_first_name = models.CharField(max_length=255)
+    shipping_last_name = models.CharField(max_length=255)
     shipping_email = models.EmailField(max_length=255)
     shipping_address1 = models.CharField(max_length=255)
     shipping_address2 = models.CharField(max_length=255,null=True, blank=True)
@@ -51,7 +53,7 @@ class ShippingAddress (models.Model):
         verbose_name_plural = "shipping address"
 
     def __str__(self):
-        return f'Shipping Address - {str(self.id)}'
+        return f'Shipping Address - {str(self.shipping_email)}'
 
 #Create a Shipping Address by default
 def create_shipping(sender, instance, created, **kwargs):
