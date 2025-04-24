@@ -79,11 +79,7 @@
         <h5><strong>Billing Details and Shipping Details</strong></h5>
       </div>
             <div class="card-body">
-    <div class="row">
-  <div class="col-sm-6 mb-3 mb-sm-0">
-    <div class="card">
-      <div class="card-body">
-          <form method="POST" action= "{% url 'billing-info' %}" autocomplete="off" class="needs-validation" novalidate>
+                <form method="POST" action= "{% url 'billing-info' %}" autocomplete="off" class="needs-validation" novalidate>
 
  {% csrf_token %}
         {{ shipping_form.as_p }}
@@ -96,35 +92,15 @@
 
     </div>
     </form>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-  </div>
+
+
 </div>
 
-    <!-- Align the button and total to the right -->
-    <div class="text-end mt-4">
-        <h4>Total: {{ totals }}</h4>
-        <br/> <br/>
-        <button type="submit"  class="btn btn-outline-secondary mt-4" >Continue To Billing ...</button>
 
-    </div>
-
-    <div class="text-end mt-2">
-
-    </div>
 </div>
 </div>
       </div>
-    </form>
+
   </div>
 </div>
 
