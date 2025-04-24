@@ -1,0 +1,74 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+<!-- Display messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4 w-50">
+    <div class="card">
+  <div class="card-header">
+    Order Summary of {{ order.id }} ordered by {{ order.full_name }}
+  </div>
+  <div class="card-body">
+      <strong>Full Name:</strong> {{ order.full_name }}
+      </br>
+       <strong>Email:</strong> {{ order.email }}
+
+</br>
+
+      <strong>Amount Paid:</strong> {{ order.amount_paid }}
+      </br>
+
+      {% if order.status == True %}
+      <strong>Date Shipped:</strong> {{ order.date_shipped }}
+      </br>
+      {% else %}
+      <strong>Date Ordered:</strong> {{ order.created_at }}
+      </br>
+
+      {% endif %}
+
+      <strong>Shipping Address:</strong> {{ order.shipping_label }}
+      </br></br>
+
+        {% for item in items %}
+            <strong>Products:</strong> {{ item.products }}      ({{ item.quantity }}) - {{ item.price }}
+                 </br>
+            {% endfor %}
+
+
+
+
+    <!-- Align the button and total to the right -->
+    <div class="text-end mt-4">
+
+          <form method="POST">
+          {% csrf_token %}
+              <input type="hidden" name = "shipping_status" value="false">
+              <button type="Submit" class="btn btn-sml btn-outline-warning"> Cancel Order</button>
+
+      </form>
+
+    </div>
+
+    <div class="text-end mt-2">
+
+    </div>
+</div>
+</div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

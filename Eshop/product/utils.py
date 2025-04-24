@@ -10,7 +10,7 @@ def generate_product_description(prompt):
     """
     client = OpenAI(
         base_url="https://api.deepseek.com/v1",
-        api_key='sk-4bd5549b441e4719b82c46013ca9ccf1', #just in this case it will be hardcoded here
+        api_key=os.environ.get('API_KEY_AI'), #just in this case it will be hardcoded here
     )
     try:
         completion = client.chat.completions.create(

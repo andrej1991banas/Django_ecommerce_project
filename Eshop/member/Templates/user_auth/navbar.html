@@ -17,7 +17,7 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">  About  |</a></li>
 
                         {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'update' %}">Update Your Profile    |</a></li>
+
                         <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Your Dashboard    |</a></li>
                          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout    |</a></li>
 
@@ -35,10 +35,26 @@
                                 <!-- Dynamically generated categories -->
                                 <li><a class="dropdown-item" href="{% url 'category-search' 1 %}"> Rods</a></li>
                                 <li><a class="dropdown-item" href="{% url 'category-search' 2 %}"> Reels</a></li>
-                                <li><a class="dropdown-item" href="{% url 'category-search' 3 %}"> Fly Lines</a></li>
-                                <li><a class="dropdown-item" href="{% url 'category-search' 4 %}"> Nets</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category-search' 3 %}"> Waders</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category-search' 4 %}"> Fly Lines</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category-search' 5 %}"> Vests</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category-search' 6 %}"> Fly Tying Materials</a></li>
+                                <li><a class="dropdown-item" href="{% url 'category-search' 7 %}"> Flyfishing Trips</a></li>
 
                             </ul>
+                        {% if user.is_superuser %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarOrders" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <li><hr class="dropdown-divider" /></li>
+                                <!-- Dynamically generated categories -->
+                                <li><a class="dropdown-item" href="{% url 'status-shipped'  %}"> Shipped Orders</a></li>
+                                <li><a class="dropdown-item" href="{% url 'status-not-shipped' %}"> Pending Orders</a></li>
+
+
+                            </ul>
+                        {% endif %}
                     </ul>
 
                     <form class="d-flex" role="search" method="POST" action="{% url 'search' %}">

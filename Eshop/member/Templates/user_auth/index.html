@@ -14,30 +14,53 @@
     {% endif %}
 
 
-        <!-- Product section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
-                    <div class="col-md-6">
-<!--                        <div class="small mb-1">SKU: BST-498</div>-->
-                        <h1 class="display-5 fw-bolder">Best Seller</h1>
-                        <div class="fs-5 mb-5">
-                            <span class="text-decoration-line-through">$45.00</span>
-                            <span>$40.00</span>
-                        </div>
-                        <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
-                        <div class="d-flex">
-                            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                            <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                                <i class="bi-cart-fill me-1"></i>
-                                Add to cart
-                            </button>
-                        </div>
+      <!-- Product Section -->
+<section class="py-2">
+
+        <div id="tripsCarousel" class="carousel slide" data-bs-ride="carousel">
+
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+                {% for product in trips %}
+                <button
+                    type="button"
+                    data-bs-target="#tripsCarousel"
+                    data-bs-slide-to="{{ forloop.counter0 }}"
+                    class="{% if forloop.first %}active{% endif %}"
+                    aria-current="{% if forloop.first %}true{% endif %}"
+                    aria-label="Slide {{ forloop.counter }}">
+                </button>
+                {% endfor %}
+            </div>
+
+            <!-- Carousel Items -->
+            <div class="carousel-inner">
+                {% for product in trips %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <!-- Full-width product image -->
+                    <img src="{{ product.image.url }}" class="d-block w-100" alt="{{ product.name }}" style="height: 100vh; object-fit: cover;">
+                    <!-- Product name and details -->
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-5 fw-bold">{{ product.brand }}</h2>
+
                     </div>
                 </div>
+                {% endfor %}
             </div>
-        </section>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#tripsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#tripsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
+        </div>
+
+</section>
         <!-- Related items section-->
         <section class="py-5 bg-light">
             <div class="container px-4 px-lg-5 mt-5">

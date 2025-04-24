@@ -1,0 +1,84 @@
+{% extends 'user_auth/base.html' %}
+
+{% block content %}
+
+<!-- Display messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4 w-50">
+    <div class="card">
+  <div class="card-header">
+    Order Summary of {{ order.id }} ordered by {{ order.full_name }}
+  </div>
+  <div class="card-body">
+      <strong>Full Name:</strong> {{ order.full_name }}
+      </br>
+       <strong>Email:</strong> {{ order.email }}
+      <strong>Amount Paid:</strong>
+</br>
+
+      <strong>Amount Paid:</strong> {{ order.amount_paid }}
+      </br>
+
+      {% if order.status == True %}
+      <strong>Date Shipped:</strong> {{ order.date_shipped }}
+      </br>
+      {% else %}
+      <strong>Date Ordered:</strong> {{ order.created_at }}
+      </br>
+      <strong>Shipping Address:</strong> {{ order.shipping_label }}
+      {% endif %}
+
+      <strong>Shipping Address:</strong> {{ order.shipping_label }}
+      </br></br>
+
+        {% for item in items %}
+            <strong>Products:</strong> {{ item.products }}      ({{ item.quantity }}) - {{ item.price }}
+                 </br>
+            {% endfor %}
+
+
+
+
+    <!-- Align the button and total to the right -->
+    <div class="text-end mt-4">
+{% if not order.status %}
+        <br/>
+        <form method="POST">
+          {% csrf_token %}
+<input type="hidden" name = "shipping_status" value="true">
+                 <button type="Submit" class="btn btn-sml btn-outline-success"> Mark As Shipped</button>
+      </form>
+        <br/>
+        {% else %}
+          <form method="POST">
+          {% csrf_token %}
+              <input type="hidden" name = "shipping_status" value="false">
+
+              <button type="Submit" class="btn btn-sml btn-outline-warning"> Mark As Not Shipped</button>
+
+
+      </form>
+        {% endif %}
+    </div>
+
+    <div class="text-end mt-2">
+
+    </div>
+</div>
+</div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

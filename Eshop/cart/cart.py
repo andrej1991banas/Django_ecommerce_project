@@ -135,15 +135,15 @@ class Cart:
         #start counting from 0
         total = 0
         items_price = 0
-        for key in products:
-            for product in products:
-                # The quantity of the current product in the cart
-                product_id_str = str(product.id)  # Convert product ID to match dictionary keys
-                if product_id_str in self.cart:
-                    quantity = self.cart[product_id_str]  # Get the quantity
 
-                    # Multiply product price by quantity
-                    total += product.price * quantity
+        for product in products:
+            # The quantity of the current product in the cart
+            product_id_str = str(product.id)  # Convert product ID to match dictionary keys
+            if product_id_str in self.cart:
+                quantity = self.cart[product_id_str]  # Get the quantity
+
+                # Multiply product price by quantity
+                total += product.price * quantity
 
         return total
 

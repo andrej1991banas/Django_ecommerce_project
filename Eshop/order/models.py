@@ -2,19 +2,22 @@ from django.db import models
 from product.models import Product
 from member.models import Member
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+import datetime
+from djmoney.models.fields import MoneyField
 
 
 # Define Order model
 class Order(models.Model):
     member = models.ManyToManyField(Member, related_name='orders', blank=True)
-    products = models.ManyToManyField(Product, related_name='orders', blank=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
-    shipping_address = models.TextField(max_length=1500)
-    amount_paid = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
+    shipping_label = models.TextField(max_length=1500)
+    amount_paid = MoneyField(max_digits=14, decimal_places=2, default_currency='EUR', default = 0)
     created_at = models.DateTimeField(auto_now_add=True) #this is setting now without using datetime module
+    status = models.BooleanField(default=False)
+    date_shipped = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -22,13 +25,26 @@ class Order(models.Model):
     def __str__(self):
         return f'Order {self.pk} created on {self.created_at}'
 
+#Auto Add shipping Date
+@receiver (pre_save, sender=Order)
+def update_shipping_date(sender, instance, **kwargs):
+    if instance.pk:
+        now = datetime.datetime.now()
+        obj = sender._default_manager.get(pk=instance.pk)
+        if instance.status and not obj.status:
+            instance.date_shipped = now
+
+
+
+
+
 
 
 #define Order Items model
 class OrderItems(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
-    products = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items', null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    products = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items', null=True,)
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='EUR', default = 0)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):

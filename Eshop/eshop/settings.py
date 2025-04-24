@@ -13,9 +13,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+from dotenv import load_dotenv
+
+
 
 
 BASE_DIR = Path(os.getenv("PROJECT_BASE_DIR", Path(__file__).resolve().parent.parent))
+
+#Load enviromental variables
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,6 +50,7 @@ INSTALLED_APPS = [
     'member',
     'cart',
     'bootstrap5',
+    'whitenoise.runserver_nostatic',
 
 ]
 
@@ -83,25 +90,41 @@ WSGI_APPLICATION = 'eshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if config('PRODUCTION', default=False, cast=bool):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST'),
-            'PORT': config('DB_PORT'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+# if config('PRODUCTION', default=False, cast=bool):
+#     DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.postgresql',
+        #     'NAME': config('DB_NAME'),
+        #     'USER': config('DB_USER'),
+        #     'PASSWORD': config('DB_PASSWORD'),
+        #     'HOST': config('DB_HOST'),
+        #     'PORT': config('DB_PORT'),
 
+#             'default': {
+#                 'ENGINE': 'django.db.backends.postgresql',
+#                 'NAME': config('budlimitless_admin'),
+#                 'USER': config('adminandrej'),
+#                 'PASSWORD': os.environ.get('DB_PASSWORD'),
+#                 'HOST': config('postgresql.r1.websupport.sk'),
+#                 'PORT': config('5432'),
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+DATABASES = {
+    'default' :{
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'budlimitless_admin',
+        'USER': 'adminandrej',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'postgresql.r1.websupport.sk',
+        'PORT': '5432',}
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
