@@ -21,8 +21,13 @@ from order.models import ShippingAddress
 
 def homepage(request):
     products= Product.objects.all()
-    context = {'products': products}
+
     # template = loader.get_template('user_auth/index.html')
+
+    trips = Product.objects.filter(category__name="Trip")
+    context = {'products': products,
+               'trips': trips}
+
 
     return render(request, 'user_auth/index.html', context)
 

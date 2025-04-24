@@ -34,7 +34,7 @@
                 </div>
                 <div class="card-body p-5">
                     <!-- CSRF Token and Form -->
-                    <form method="post" action="{% url 'checkout' %}">
+                    <form method="post" action="{% url 'process-order' %}">
                         {% csrf_token %}
                         {{ billing_form.as_p }}
 
