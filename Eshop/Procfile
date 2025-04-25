@@ -1,1 +1,1 @@
-   web: gunicorn <eshop>.wsgi:application
+web: gunicorn eshop.wsgi:application --bind 0.0.0.0:$PORT
