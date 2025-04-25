@@ -13,15 +13,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
-from dotenv import load_dotenv
+
 
 
 
 
 BASE_DIR = Path(os.getenv("PROJECT_BASE_DIR", Path(__file__).resolve().parent.parent))
 
-#Load enviromental variables
-load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -189,5 +187,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
