@@ -115,15 +115,17 @@ WSGI_APPLICATION = 'eshop.wsgi.application'
 #             'NAME': BASE_DIR / 'db.sqlite3',
 #         }
 #     }
+
 DATABASES = {
-    'default' :{
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'budlimitless_admin',
-        'USER': 'adminandrej',
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': 'postgresql.r1.websupport.sk',
-        'PORT': '5432',}
+        'NAME': os.environ.get('DB_NAME', ''),  # Database name
+        'USER': os.environ.get('DB_USER', ''),  # Database user
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),  # Database password
+        'HOST': os.environ.get('DB_HOST', ''),  # Database host
+        'PORT': os.environ.get('DB_PORT', '5432'),  # Default PostgreSQL port
     }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
