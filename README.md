@@ -13,27 +13,38 @@
 - Shopping cart functionality (with persistence for logged-in users).
 - Integration of AI (used to generate product descriptions dynamically).
 - Product search functionality and responsive UI design
+- Admin Analytics Dashboard for sales tracking
 
 This project showcases practical experience in handling **real-time scenarios**, collecting **data-driven demands**, and creating a **user-friendly environment**.
+
+For visuals please check 
+Eshop/images/...
+or 
+Visuals from test with Selenium and Playwright
+Eshop/eshop/test/tests_screenshots/...
 
 ## Features
 
 - **Authentication System**:
   - User login and logout.
-  - Registration with email validation.
+  - 
   - Password management & user profile updates.
+
 - **Product Management**:
   - Add, edit, and delete products and categories (CRUD operations).
   - Category-wise product filtering using dynamic dropdowns.
   - AI-assisted automatic product description generation.
+    
 - **Shopping Cart**:
   - Add/update/delete products from the cart.
   - Persistence: remembers the cart across sessions.
   - Updated cart summary for logged-in and guest users.
   - Cart total and product listing for easy checkout.
+
 - **Frontend Design**:
   - Fully responsive and built using **Bootstrap**.
   - Dynamic navigation system based on product categories.
+ 
 - **Other Features**:
   - Product details page.
   - Empty cart and category-specific fallbacks.
@@ -41,17 +52,17 @@ This project showcases practical experience in handling **real-time scenarios**,
   - Search bar functionality to quickly find products.
 
 ---
+###  **Test coverage**
+- May/2/2025 82% coverage of whole project
 
 ### 1. **Model Testing**
-- Ensures correctness of models like `User`, `Member`, `Category`, and `Product`.
+- Ensures correctness of models like `User`, `Member`, `Category`, `Product`,  `Order` and `OrderItems`.
 - Verifies the `create`, `read`, `update`, and `delete` operations for all models.
 - Tests string representations (`__str__`) for clarity in admin panels.
 
 ### 2. **View Testing**
 - Confirms HTTP status codes (e.g., 200 OK, 404 Not Found, or 302 Redirect) for several views including:
   - Homepage (`/index`)
-  - ![screenshot_homepage](https://github.com/user-attachments/assets/e0cc3869-4324-43ea-b2f0-753c2dacdd53)
-
   - Category search (`/category/<id>`)
   - Product details (`/product/<id>`)
   - Cart summary (`/cart-summary`)
@@ -66,6 +77,7 @@ This project showcases practical experience in handling **real-time scenarios**,
 ### 4. **Authentication Flow**
 - Verifies redirections for unauthenticated users attempting to access sensitive pages:
   - Dashboard (`/dashboard`)
+  - 
   - Update profile (`/update-user`)
   - Password update (`/update-password`)
 - Confirms that error messages and redirects function as expected.
@@ -75,8 +87,12 @@ This project showcases practical experience in handling **real-time scenarios**,
 - Ensures correct product listings and filters are returned for each selected category.
 - Handles empty or non-existent categories gracefully (e.g., fallback messages or 404 views).
 
-All test cases can be found in eshop/test - Unittest, eshop/test/tests_selenium - test cases with Selenium, eshop/test/tests_playwright - test cases with Playwright
-All screenshots for test cases from the client can be found in eshop/test/tests_screenshots
+All test cases can be found in 
+Eshop/eshop/test - Unittest, 
+Eshop/eshop/test/tests_selenium - test cases with Selenium, 
+Eshop/eshop/test/tests_playwright - test cases with Playwright
+
+All screenshots for test cases from the client can be found in Eshop/eshop/test/tests_screenshots
 
 Here is a snippet of some Main Test Cases:
 
@@ -147,7 +163,7 @@ Follow these steps to set up the project locally:
 
 - Add a **Payment Gateway** (e.g., PayPal or Stripe).
 - Add a **Imagine Engine** for creating product images with AI tool ComfyUI
-- Enable newsletter subscription feature.
+
 - Provide Admin Analytics Dashboard for sales tracking.
 
 ---
