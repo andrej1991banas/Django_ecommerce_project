@@ -50,6 +50,8 @@ This project showcases practical experience in handling **real-time scenarios**,
 ### 2. **View Testing**
 - Confirms HTTP status codes (e.g., 200 OK, 404 Not Found, or 302 Redirect) for several views including:
   - Homepage (`/index`)
+  - ![screenshot_homepage](https://github.com/user-attachments/assets/e0cc3869-4324-43ea-b2f0-753c2dacdd53)
+
   - Category search (`/category/<id>`)
   - Product details (`/product/<id>`)
   - Cart summary (`/cart-summary`)
