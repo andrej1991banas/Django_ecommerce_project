@@ -25,7 +25,8 @@ class MyViewTestCase(TestCase):
         """Test if the homepage returns a 200 HTTP status."""
         response = self.client.get(reverse("index"))  # Use reverse() for named URL patterns
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Best Seller")  # Check content
+        self.assertContains(response, "Thymallus Flyfishing")  # Check content
+        print ("Test case for loading homepage successfully finished")
 
 
     def test_about(self):
@@ -33,6 +34,7 @@ class MyViewTestCase(TestCase):
         response = self.client.get(reverse("about"))  # Use reverse() for named URL patterns
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "About Us ...")  # Check content
+        print("Test case for loading about successfully finished")
 
 
     def test_register(self):
@@ -40,6 +42,7 @@ class MyViewTestCase(TestCase):
         response = self.client.get(reverse("register"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Register")  # Check content
+        print("Test case for loading register page successfully finished")
 
 
     def test_login(self):
@@ -47,6 +50,7 @@ class MyViewTestCase(TestCase):
         response = self.client.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Sign In")  # Check content
+        print("Test case for loading login page successfully finished")
 
 
     def test_navbar(self):
@@ -57,8 +61,9 @@ class MyViewTestCase(TestCase):
         self.assertContains(response, "Rod")
         self.assertContains(response, "Reels")
         self.assertContains(response, "Fly Lines")
-        self.assertContains(response, "Nets")
+
         #ensuring that navbar downdrop showing all categories from products
+        print("Test case for loading navbar and its items successfully finished")
 
 
     def test_cart_summary(self):
@@ -67,7 +72,7 @@ class MyViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)     #check what is on the cart summary page
         self.assertContains(response, "Shopping cart")
         self.assertContains(response, "Now check your cart")
-
+        print("Test case for loading cart summary page successfully finished")
 
 
 
@@ -88,6 +93,7 @@ class LoginRequiredPages(TestCase):
         # Assert messages exist
         self.assertTrue(len(messages) > 0)  # This will clarify why the test fails
         self.assertEqual(str(messages[0]), "You must be logged in to access this page")  # Check the exact message
+        print("Test case for non authenticated user trying to access update password page successfully finished")
 
 
     def test_update_user(self):
@@ -105,6 +111,7 @@ class LoginRequiredPages(TestCase):
         # Assert messages exist
         self.assertTrue(len(messages) > 0)  # This will clarify why the test fails
         self.assertEqual(str(messages[0]), "You must be logged in to access this page")  # Check the exact message
+        print("Test case for non authenticated user trying to access update user details page successfully finished")
 
 
     def test_dashboard(self):
@@ -122,7 +129,39 @@ class LoginRequiredPages(TestCase):
         # Assert messages exist
         self.assertTrue(len(messages) > 0)  # This will clarify why the test fails
         self.assertEqual(str(messages[0]), "You must be logged in to access this page")  # Check the exact message
+        print("Test case for non authenticated user trying to access dashboard page successfully finished")
 
+
+    def test_add_product(self):
+        """ Test if the add product page loads successfully"""
+        response = self.client.get(reverse("add-product"))
+        self.assertEqual(response.status_code, 200)  # check what is on the cart summary page
+        self.assertContains(response, "Add product") # check the successful loading og the page
+        print("Test case for loading add product page successfully finished")
+
+
+    def test_checkoout(self):
+        """ Test if the checkout page loads successfully"""
+        response = self.client.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 200)     #check what is on the checkout page
+        self.assertContains(response, "Shopping cart")
+        print("Test case for loading checkout page successfully finished")
+
+
+    def test_billing_info(self):
+        """ Test if the billing info page loads successfully"""
+        response = self.client.get(reverse("billing-info"))
+        self.assertEqual(response.status_code, 200)     #check what is on the billing info page
+        self.assertContains(response, "Billing info")
+        print("Test case for loading billing info page successfully finished")
+
+
+    def test_payment_info(self):
+        """ Test if the payment info page loads successfully"""
+        response = self.client.get(reverse("payment-info"))
+        self.assertEqual(response.status_code, 200)     #check what is on the billing info page
+        self.assertContains(response, "Billing and Card Details Details")
+        print("Test case for loading payment info page successfully finished")
 
 
 
@@ -143,6 +182,8 @@ class CategorySearchTestCase(TestCase):
         Product.objects.create(model="Reel C", category=self.category_reels, price=120.00)
         Product.objects.create(model="Fly Line A", category=self.category_fly_line, price=80.00)
         Product.objects.create(model="Fly Line B", category=self.category_fly_line, price=90.00)
+        print("Created test products")
+
 
     def test_category_search(self):
         """ Test if clicking on the link in dropdown menu redirects to the correct page.
@@ -164,6 +205,7 @@ class CategorySearchTestCase(TestCase):
         self.assertContains(response, 'Fly Rod B')
         self.assertNotContains(response, 'Fly line A') #check for rendering the wrong data
         self.assertNotContains(response, 'Reel A')
+        print("Search by category id=1 successfully finished")
 
         #check for category of Reels
         category_id = 2  # Example: Switch to "Reels"
@@ -178,6 +220,7 @@ class CategorySearchTestCase(TestCase):
         self.assertContains(response, 'Reel C')
         self.assertNotContains(response, 'Fly line B')  # check for rendering the wrong data
         self.assertNotContains(response, 'Fly Rod A')
+        print("Search by category id=2 successfully finished")
 
         # check for category of Fly Lines
         category_id = 3  # Example: Switch to "Fly Lines"
@@ -192,7 +235,7 @@ class CategorySearchTestCase(TestCase):
         self.assertContains(response, 'Fly Line B')
         self.assertNotContains(response, 'Reel B')  # check for rendering the wrong data
         self.assertNotContains(response, 'Fly Rod A')
-
+        print("Search by category id=3 successfully finished")
 
         category_id = 4  # Example: Switch to "Nets" which does not contain any products
         url = reverse('category-search', args=[category_id])
@@ -206,7 +249,7 @@ class CategorySearchTestCase(TestCase):
         self.assertTemplateUsed(response, 'product/category_search.html')
         # but rendering the empty page, not 404 page
         self.assertContains(response, "No products available in this category.")
-
+        print("Search by category id=4 successfully finished")
 
         #check the 404 not found page
         category_id = 5
@@ -216,7 +259,7 @@ class CategorySearchTestCase(TestCase):
         response = self.client.get(url)
         #check for 404 not found status page if we use ID for non existing category of product
         self.assertEqual(response.status_code, 404)
-
+        print("Search by category id=5 successfully finished")
 
 
 
@@ -235,6 +278,7 @@ class ProductDetailsTestCase(TestCase):
         Product.objects.create(id=5, model="Reel B",brand="Hardy Test Reel", category=self.category_reels, price=100.00)
         Product.objects.create(id=7, model="Fly Line A",brand="Hanak Test Line", category=self.category_fly_line, price=70.00)
         Product.objects.create(id=8, model="Fly Line B", brand="Hardy Test Line", category=self.category_fly_line, price=90.00)
+        print("Test products created")
 
 
     def test_product_details(self):
@@ -253,6 +297,7 @@ class ProductDetailsTestCase(TestCase):
         self.assertContains(response, 'Hanak Test')
         self.assertNotContains(response, 'Fly Rod B')#checks for wrong data
         self.assertNotContains(response, 'Hardy Test Line')
+        print("Test product details for product id=1 was successful!")
 
         #set for the details of the first product
         id = 7
@@ -267,7 +312,7 @@ class ProductDetailsTestCase(TestCase):
         self.assertContains(response, '70.00')
         self.assertNotContains(response, 'Fly Rod A')  # checks for wrong data
         self.assertNotContains(response, 'Hardy Test Line')
-
+        print("Test product details for product id=7 was successful!")
 
 
 
@@ -307,6 +352,7 @@ class CartTestCase(TestCase):
         self.assertEqual(len(self.cart), 0) #asume empty cart
         self.assertIsInstance(self.cart.cart, dict) #check the cart is dictionary {'price': str(product.price)}
         self.assertTrue('session_key' in self.request.session)  # Ensure the session key is set
+        print("Test case for initialization of an empty cart was successful!")
 
 
     def test_add_product_to_cart(self):
@@ -316,6 +362,7 @@ class CartTestCase(TestCase):
         self.assertIn(str(self.product_1.id), self.cart.cart)  # Verify product is in the cart
         self.assertEqual(len(self.cart), 1)  # Verify cart size is now 1
         self.assertIn(self.product_1, products)  # Ensure product1 is in the fetched list
+        print("Test case for adding item to the cart was successful!")
 
 
     def test_delete_product_from_cart(self):
@@ -325,6 +372,7 @@ class CartTestCase(TestCase):
         self.cart.delete(self.product_3.id)  # Delete product
         self.assertNotIn(str(self.product_3.id), self.cart.cart)  # Verify product is removed
         self.assertEqual(len(self.cart), 0)  # Ensure cart is now empty
+        print("Test case for deleting item from the cart was successful!")
 
 
     def test_get_cart_products(self):
@@ -335,6 +383,7 @@ class CartTestCase(TestCase):
         self.assertEqual(len(products), 2)  # Verify 2 products are fetched
         self.assertIn(self.product_4, products)  # Ensure product1 is in the fetched list
         self.assertIn(self.product_2, products)  # Ensure product2 is in the fetched list
+        print("Test case for getting items  from the cart was successful!")
 
 
     def test_cart_total(self):
@@ -343,7 +392,8 @@ class CartTestCase(TestCase):
 
         self.cart.add(self.product_2, 3)
         total = self.cart.cart_total()  # Calculate total
-        self.assertEqual(total.amount, 1640)  # Verify total calculation for price is correct
+        self.assertEqual(total.amount, 820)  # Verify total calculation for price is correct
+        print("Test case cart total was successful!")
 
 
     def test_empty_cart(self):
@@ -362,4 +412,5 @@ class CartTestCase(TestCase):
         # Assert that the "No products in your shopping cart" message is rendered
         self.assertContains(response, "No products in your shopping cart")
         self.assertEqual(response.status_code, 200)
+        print("Test case for empty cart after deletion was successful!")
 

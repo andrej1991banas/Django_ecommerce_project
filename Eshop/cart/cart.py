@@ -42,7 +42,7 @@ class Cart:
 
 
     def add(self, product, quantity ):
-        product_id= str(product.id)
+        product_id= str(product)
         product_qty = quantity
 
         #logic
@@ -103,7 +103,7 @@ class Cart:
             #save our variable "carty" into Member model
             current_profile.update(old_cart=str(carty))
 
-        updated_cart = self.cart
+        updated_cart = act_cart
         return updated_cart
 
 

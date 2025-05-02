@@ -81,9 +81,10 @@ def register(request):
             return redirect("login")
         else:
             # Add messages for form errors
+            messages.success(request, "FIll registration form as required")
             for error in form.errors.values():
                 messages.error(request, error)
-
+            form = CreateUserForm()
     else:
         form = CreateUserForm()
 
@@ -146,18 +147,10 @@ def update_user(request):
         current_user = request.user
 
         # Get the logged-in user's Member object (via the OneToOne relationship)
-        try:
-            member = current_user.member  # Access the related Member object
-        except Member.DoesNotExist:
-            messages.error(request, "Member profile not found.")
-            return redirect("dashboard")
+        member = current_user.member  # Access the related Member object
 
         # Get current user's shipping info
-        try:
-            shipping_user = ShippingAddress.objects.get(shipping_user=request.user.id)
-        except ShippingAddress.DoesNotExist:
-            messages.error(request, "Shipping address not found.")
-            return redirect("dashboard")
+        shipping_user = ShippingAddress.objects.get(shipping_user=request.user.id)
 
         # Initialize UpdateUserForm (for profile details)
         update_form = UpdateUserForm(request.POST or None, instance=member)
@@ -189,14 +182,9 @@ def update_user(request):
                 shipping_updated = True  # Indicate successful update
 
             # Provide success message depending on the forms updated
-            if user_updated and shipping_updated:
-                messages.success(request, "Your account and shipping address have been updated!")
-            elif user_updated:
+            if user_updated or shipping_updated:
                 messages.success(request, "Your account has been updated!")
-            elif shipping_updated:
-                messages.success(request, "Your account has been updated!")
-            else:
-                messages.error(request, "No changes were made. Please correct the errors below.")
+
 
         # Render the form template with a proper context (GET or POST)
         return render(request, "user_auth/update_user.html", {
@@ -239,21 +227,18 @@ def update_password(request):
 
 def search(request):
     # determine if they filled out the form
-    if request.method == "POST":
-        searched = request.POST['searched']
-        #Query database model data
-        searched = Product.objects.filter(Q (brand__icontains=searched) | Q (model__icontains=searched) | Q (description__icontains=searched))
+    searched = request.POST['searched']
+    #Query database model data
+    searched = Product.objects.filter(Q (brand__icontains=searched) | Q (model__icontains=searched) | Q (description__icontains=searched))
 
-        #conditions  for no result
-        if not searched:
-            messages.success(request, "Please, try your search again")
-            return render(request, 'user_auth/index.html', {})
-
-        else:
-            return render(request, 'user_auth/search.html', {'searched': searched})
-    else:
+    #conditions  for no result
+    if not searched:
         messages.success(request, "Please, try your search again")
-        return render(request, 'product/show_products.html', {})
+        return render(request, 'user_auth/index.html', {})
+
+    else:
+        return render(request, 'user_auth/search.html', {'searched': searched})
+
 
 
 def delete_user(request):

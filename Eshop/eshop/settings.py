@@ -30,7 +30,13 @@ BASE_DIR = Path(os.getenv("PROJECT_BASE_DIR", Path(__file__).resolve().parent.pa
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False  # Ensure that the application uses HTTPS
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SECURE_BROWSER_XSS_FILTER = False
+SECURE_CONTENT_TYPE_NOSNIFF = False
 
 ALLOWED_HOSTS =config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
@@ -89,43 +95,24 @@ WSGI_APPLICATION = 'eshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# if config('PRODUCTION', default=False, cast=bool):
-#     DATABASES = {
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.postgresql',
-        #     'NAME': config('DB_NAME'),
-        #     'USER': config('DB_USER'),
-        #     'PASSWORD': config('DB_PASSWORD'),
-        #     'HOST': config('DB_HOST'),
-        #     'PORT': config('DB_PORT'),
-
-#             'default': {
-#                 'ENGINE': 'django.db.backends.postgresql',
-#                 'NAME': config('budlimitless_admin'),
-#                 'USER': config('adminandrej'),
-#                 'PASSWORD': os.environ.get('DB_PASSWORD'),
-#                 'HOST': config('postgresql.r1.websupport.sk'),
-#                 'PORT': config('5432'),
-#         }
-#     }
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', ''),  # Database name
-        'USER': os.environ.get('DB_USER', ''),  # Database user
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),  # Database password
-        'HOST': os.environ.get('DB_HOST', ''),  # Database host
-        'PORT': os.environ.get('DB_PORT', '5432'),  # Default PostgreSQL port
+if config('PRODUCTION', default=False, cast=bool):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST'),
+            'PORT': config('DB_PORT'),}}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -162,29 +149,36 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 
-STATIC_URL = '/static/'
+# settings.py
+
+# Static file configuration
+STATIC_URL = '/static/'  # Where static files are served
 STATICFILES_DIRS = [
-    BASE_DIR / "static"  # Adjust based on your project structure
+    BASE_DIR / "static",  # Your project-level static files go here
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # This is where `collectstatic` collects files
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Where `collectstatic` collects files for production
 
+# Media file configuration
+MEDIA_URL = '/media/'  # Where media files are served
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Local directory to store uploaded files
+
+# Optional: Example STORAGES configuration
 STORAGES = {
-    # ...
-
-    'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
-        'OPTIONS': {
-            'location': BASE_DIR / 'media',  # or specify the path where media files are stored
-        },
-    },
+    # Static files storage backend for production
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
+
+    # Media files (only required for advanced backends like cloud storage)
+    # For development, Django serves media files directly without this
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'OPTIONS': {
+            'location': BASE_DIR / 'media',
+        },
+    },
 }
 
-MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join (BASE_DIR, 'media')
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -21,18 +21,20 @@ class CrudUserTestCase(TestCase):
         """Setup pre-test data for the test case"""
         #Create User for Member
         self.user = User.objects.create(username= "andrejtest", first_name="Testandrej", last_name="Test", email="andrej@test.com")
-
+        print ("Initialize User model for testing")
 
     def test_user_creation(self):
         """Test if the model object is being created correctly."""
         self.assertEqual(self.user.username, "andrejtest")
         self.assertEqual(self.user.last_name, "Test")
         self.assertIsNotNone(self.user.id)
+        print ("Test case for User creation successfully completed!")
 
 
     def test_user_str_method(self):
         """ Test if the model User is being printed correctly."""
         self.assertEqual(str(self.user), "andrejtest")
+        print (" Test case for User str method successfully completed!")
 
 
     def test_user_update_method(self):
@@ -44,6 +46,7 @@ class CrudUserTestCase(TestCase):
 
         self.assertEqual(user.first_name, "Testandrej2") #check updated data
         self.assertEqual(user.last_name, "Test") #check not updated data
+        print(" Test case for User update method successfully completed!")
 
 
     def test_user_delete_method(self):
@@ -51,6 +54,7 @@ class CrudUserTestCase(TestCase):
         self.user.delete()
 
         self.assertFalse(User.objects.filter(id=self.user.id).exists())
+        print(" Test case for User delete method successfully completed!")
 
 
 class CrudMemberTestCase(TestCase):
@@ -69,6 +73,7 @@ class CrudMemberTestCase(TestCase):
             phone_number="123456789",
             city="TestCity",
             country="USA")
+        print("Initialize Member model for testing")
 
 
     def test_member_creation(self):
@@ -78,10 +83,13 @@ class CrudMemberTestCase(TestCase):
         self.assertIsNotNone(self.member.user.id) #User model tangled with Member model with user and OneToOne field
         self.assertEqual(self.member.gender, "Male") #actual Member data
         self.assertEqual(self.member.city, "TestCity") #actual Member data
+        print ("Test case for Member creation successfully completed!")
+
 
     def test_member_str_method(self):
         """ Test if the Member model is being printed correctly. """
         self.assertEqual(str(self.member),"Testandrej Test (andrej@test.com)" )
+        print("Test case for Member str method successfully completed!")
 
 
     def test_member_update_method(self):
@@ -94,6 +102,7 @@ class CrudMemberTestCase(TestCase):
         self.assertEqual(member.first_name, "Testandrej2")#test updated data
         self.assertEqual(member.last_name, "Test") #test old data
         self.assertEqual(member.user.email, "andrej@test.com")
+        print("Test case for Member update method successfully completed!")
 
 
     def test_member_delete_method(self):
@@ -102,7 +111,7 @@ class CrudMemberTestCase(TestCase):
         member.delete() #delete the Member
 
         self.assertFalse(Member.objects.filter(first_name="Testandrej").exists()) #check if the querry of Members is empty
-
+        print("Test case for Member delete method successfully completed!")
 
 
 
@@ -113,6 +122,8 @@ class CrudProductTestCase(TestCase):
 
         # Create dummy products for the category
         self.prod=Product.objects.create(model="Fly Rod A",brand="Hanak", category=self.category_rods, price=100.00)
+        print("Initialize Product model for testing")
+        print("Initialize Category model for testing")
 
 
     def test_create_category_method(self):

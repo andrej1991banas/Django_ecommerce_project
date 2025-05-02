@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .form import AddProduct
+from .form import AddProduct, AddProductTest
 from .models import Product, Category
 from django.http import Http404,HttpResponse
 
@@ -25,6 +25,23 @@ def add_product(request):
 
 
     return render(request, 'product/add_product.html', context)
+
+def test_add_product(request):
+    if request.method == 'POST':
+        # Handle the form submission here (e.g., save input data, process logic)
+            form = AddProductTest(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()  # validating the values of inputs
+                messages.success(request, "Your product has been added successfully!")
+                return redirect("add-product-test") #after processing redirect to
+
+    else:
+        form = AddProductTest()
+
+    context = {'productformtest': form}  # Return the generated description (if any)
+
+
+    return render(request, 'product/test_add_product.html', context)
 
 
 def show_products(request):

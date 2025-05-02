@@ -33,7 +33,8 @@ def cart_add(request):
             product = get_object_or_404(Product, id=product_id)
 
             #save to session
-            cart.add(product=product, quantity=product_qty)
+
+            cart.add(product=product_id, quantity=product_qty)
 
             #get cart quantity
             cart_quantity = cart.__len__()
@@ -53,7 +54,7 @@ def cart_add(request):
 
 
             # save to session
-            cart.add(product=product, quantity=product_qty)
+            cart.add(product=product_id, quantity=product_qty)
 
             # get cart quantity
             cart_quantity = cart.__len__()

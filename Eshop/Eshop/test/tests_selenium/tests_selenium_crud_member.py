@@ -30,7 +30,50 @@ class MyTests(LiveServerTestCase):
         # Instantiate the WebDriver with the Service
         self.driver = webdriver.Chrome(service=service, options=options)
 
+
+    def test_crud_with_not_complete_user_member_credentials(self):
+        """" Test registragion page with not complte data to create User and Member objects"""
+        # Access the test server's homepage
+        driver = self.driver
+
+        driver.get(self.live_server_url+"/register") #load register page
+        time.sleep(2)
+
+        #find and indentify fields from the register form
+        username_field = driver.find_element(By.NAME, "username")
+        email_field = driver.find_element(By.NAME, "email")
+        password_field = driver.find_element(By.NAME, "password1")
+        password_field2 = driver.find_element(By.NAME, "password2")
+
+
+        register_button = driver.find_element(By.XPATH, "//input[@value='Register']")
+
+        #creating and input for testing credentials
+        username_field.send_keys("testuser")
+        email_field.send_keys("testuser@example.com")
+        password_field.send_keys("Speyya1991????")
+        password_field2.send_keys("Speyya1991????")
+
+        driver.get_screenshot_as_file('eshop\\test\\tests_screenshots\\selenium_crud_member_pics\\screenshot_register_with_input.png')
+        print("Test case used credentials")
+        # wait for ipnuted data and redirecting to login page
+        register_button.click()
+
+       # Wait for the success message to appear (e.g., a div with class "alert-success")
+        success_message = WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "alert-success")))
+
+        time.sleep(5)
+
+        driver.get_screenshot_as_file('eshop\\test\\tests_screenshots\\selenium_crud_member_pics\\screenshot_registered_user.png')
+        self.assertEqual(driver.current_url, self.live_server_url +"/register") #assert redirect to the login page
+        self.assertIn("FIll registration form as required", success_message.text)
+        print("User not created!")
+
+
+
     def test_crud_with_user_member_process(self):
+        """" Creation and registration User and Member objects with valid credentials"""
         # Access the test server's homepage
         driver = self.driver
 
@@ -67,7 +110,7 @@ class MyTests(LiveServerTestCase):
         print("User created!")
 
         """ Test log in for user"""
-
+        print ("redirect to the login page")
         #find fields from the log in form
         username_field = driver.find_element(By.NAME, "username")
         password_field = driver.find_element(By.NAME, "password")
@@ -79,7 +122,7 @@ class MyTests(LiveServerTestCase):
         password_field.send_keys("Speyya1991????")
         driver.get_screenshot_as_file(
             'eshop\\test\\tests_screenshots\\selenium_crud_member_pics\\screenshot_login_data_user.png')
-
+        print("Using test user credentials")
         login_button.click()
         time.sleep(5)
 
@@ -123,6 +166,7 @@ class MyTests(LiveServerTestCase):
 
         self.assertEqual(driver.current_url, self.live_server_url + "/update") #assert stay on  the update page
         # Verify the success message text
+
         self.assertIn("Your account has been updated!", success_message.text)
         print("Updated member info!")
 
@@ -206,7 +250,7 @@ class MyTests(LiveServerTestCase):
 
         self.assertEqual(driver.current_url, self.live_server_url + "/update")  # assert stay on  the update page
         # Verify the success message text
-        self.assertIn("Your account and shipping address have been updated!", success_message.text)
+        self.assertIn("Your account has been updated!", success_message.text)
 
         # verify success message and updated data in profile info
         driver.get_screenshot_as_file(
@@ -214,7 +258,46 @@ class MyTests(LiveServerTestCase):
         print("Updated member personal and shipping info!")
 
 
-        """ Test update password case"""
+
+        """ Test update password with wrong credentials case"""
+
+        driver.get(self.live_server_url + "/dashboard")  # load register page
+
+        # Wait explicitly for the "Update Password" button to be clickable
+        update_password = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.LINK_TEXT, "Update Password"))
+        )
+        update_password.click()  # Proceed with clicking the button
+        print("Current url:", driver.current_url)
+
+        # find fields for input the new password
+        new_password1_field = driver.find_element(By.NAME, "new_password1")
+        new_password2_field = driver.find_element(By.NAME, "new_password2")
+        change_button = driver.find_element(By.XPATH, "//input[@value='Change Password']")
+
+        # input new data into the form and change password
+        new_password1_field.send_keys("Spezza")
+        new_password2_field.send_keys("Spezza1991?")
+        change_button.click()
+        print ("Setting new password, with not mathcing passwords")
+
+        # Wait for the new update password page to load
+        WebDriverWait(driver, 10).until(
+            EC.url_to_be(self.live_server_url + "/update-password")
+        )
+
+        # Wait for the error message
+        success_message = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "alert-success"))
+        )
+
+        # Assert the success message and URL
+        self.assertIn("You have to use matching passwords", success_message.text)
+        self.assertEqual(driver.current_url, self.live_server_url + "/update-password")
+
+
+
+        """ Test update password with correct credentials case"""
 
         driver.get(self.live_server_url + "/dashboard")  # load register page
 
@@ -254,6 +337,7 @@ class MyTests(LiveServerTestCase):
         driver.get_screenshot_as_file(
             'eshop\\test\\tests_screenshots\\selenium_crud_member_pics\\screenshot_update_password.png')
         print("Password updated!")
+
 
         """ Test delete user case """
 

@@ -90,6 +90,36 @@ class MyTests(StaticLiveServerTestCase):
             path="eshop/test/tests_screenshots/tests_playwright_shopping_operations/only_numeric_passwords.png")
         print("Test case for wrong credentials for all numeric password successfully completed!")
 
+    def test_user_registration_wrong_credentials_for_numeric_and_common_password(self):
+        """ Test case for wrong credentials for all numeric and common password."""
+
+        # Navigate to the register page
+        self.page.goto(f"{self.live_server_url}/register")
+
+        # Find and fill username/password fields
+        self.page.fill("input[name='username']", "testuser")
+        self.page.fill("input[name='email']", "testuser@gmail.com")
+        self.page.fill("input[name='password1']", "123456789")
+        self.page.fill("input[name='password2']", "123456789")
+        self.page.fill("input[name='first_name']", "AndrejTest?")
+        self.page.fill("input[name='last_name']", "BanasTest?")
+        self.page.fill("input[name='phone_number']", "091561714")
+
+        # Click the login button
+        self.page.click("input[value='Register']")
+        time.sleep(5)
+
+        # Wait for the error message to appear and locate it
+        error_messages = self.page.locator("div.alert-error ul li").all_text_contents()
+        expected_message1 = "This password is entirely numeric."
+        expected_message2 = "This password is too common."
+
+        self.assertIn(expected_message1, error_messages)
+        self.assertIn(expected_message2, error_messages)
+        self.page.screenshot(
+            path="eshop/test/tests_screenshots/tests_playwright_shopping_operations/only_numeric_passwords.png")
+        print("Test case for wrong credentials for all numeric and common password successfully completed!")
+
 
 
     def test_user_registration_wrong_credentials_for_short_password(self):
@@ -124,7 +154,7 @@ class MyTests(StaticLiveServerTestCase):
 
 
     def test_user_registration_missing_credentials_for_registration(self):
-        """ Test case for wrong credentials for password too short."""
+        """ Test case for wrong credentials for missing credentials."""
 
         # Navigate to the register page
         self.page.goto(f"{self.live_server_url}/register")
@@ -132,8 +162,8 @@ class MyTests(StaticLiveServerTestCase):
         # Find and fill username/password fields
         self.page.fill("input[name='username']", "testuser")
         self.page.fill("input[name='email']", "")
-        self.page.fill("input[name='password1']", "Spezza")
-        self.page.fill("input[name='password2']", "Spezza")
+        self.page.fill("input[name='password1']", "Spezza1991|????")
+        self.page.fill("input[name='password2']", "Spezza1991|????")
         self.page.fill("input[name='first_name']", "?")
         self.page.fill("input[name='last_name']", "")
         self.page.fill("input[name='phone_number']", "091561714")
@@ -154,7 +184,7 @@ class MyTests(StaticLiveServerTestCase):
 
 
     def test_user_successful_registration(self):
-        """ Test case for wrong credentials for password too short."""
+        """ Test case for successful registration process."""
 
         # Navigate to the register page
         self.page.goto(f"{self.live_server_url}/register")
@@ -204,8 +234,6 @@ class MyTests(StaticLiveServerTestCase):
 
         # Wait for the error message to appear and locate it
         error_messages = self.page.locator("ul.errorlist li").all_text_contents()
-        expected_message = "Please enter a correct username and password. Note that both fields may be case-sensitive."
-
 
         # Assert the error message content
         expected_message = "Please enter a correct username and password. Note that both fields may be case-sensitive."
