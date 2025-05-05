@@ -2,6 +2,7 @@ from django import forms
 from .models import ShippingAddress
 
 
+
 class ShippingAddressForm(forms.ModelForm):
     shipping_first_name = forms.CharField(label="", widget=forms.TextInput(
             attrs={'class': 'form-control', 'placeholder': 'First Name'}), required = True)
@@ -28,6 +29,26 @@ class ShippingAddressForm(forms.ModelForm):
         fields = ['shipping_first_name', 'shipping_last_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country']
 
         exclude = ['shipping_user',]
+
+    def save(self, commit=True):
+        # Call the parent save method but don't immediately commit to the database
+        shipping_address = super().save(commit=False)
+
+        # Add any required custom behavior (like cleaning or additional logic)
+        shipping_address.shipping_first_name = self.cleaned_data['shipping_first_name']
+        shipping_address.shipping_last_name = self.cleaned_data['shipping_last_name']
+        shipping_address.shipping_email = self.cleaned_data['shipping_email']
+        shipping_address.shipping_address1 = self.cleaned_data['shipping_address1']
+        shipping_address.shipping_address2 = self.cleaned_data.get('shipping_address2', '')  # Optional
+        shipping_address.shipping_city = self.cleaned_data['shipping_city']
+        shipping_address.shipping_state = self.cleaned_data.get('shipping_state', '')  # Optional
+        shipping_address.shipping_zipcode = self.cleaned_data['shipping_zipcode']
+        shipping_address.shipping_country = self.cleaned_data['shipping_country']
+
+        if commit:
+            shipping_address.save()
+
+        return shipping_address
 
 
 class PaymentForm(forms.Form):

@@ -54,7 +54,7 @@ class OrderItems(models.Model):
 
 
 class ShippingAddress (models.Model):
-    shipping_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shipping_address')
+    shipping_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shipping_address',null=True,blank=True)
     shipping_first_name = models.CharField(max_length=255)
     shipping_last_name = models.CharField(max_length=255)
     shipping_email = models.EmailField(max_length=255)

@@ -84,7 +84,7 @@ def register(request):
             messages.success(request, "FIll registration form as required")
             for error in form.errors.values():
                 messages.error(request, error)
-            form = CreateUserForm()
+                form = CreateUserForm()
     else:
         form = CreateUserForm()
 

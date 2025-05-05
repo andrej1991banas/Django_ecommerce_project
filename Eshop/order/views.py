@@ -30,7 +30,20 @@ def checkout(request):
     if request.user.is_authenticated:
         #checkout as User
         shipping_user = ShippingAddress.objects.get(shipping_user=request.user.id)
-        shipping_form = ShippingAddressForm(request.POST or None, instance=shipping_user)
+        shipping_form = ShippingAddressForm(request.POST, instance=shipping_user)
+        if shipping_form.is_valid():
+            shipping_address = shipping_form.save(commit=False)
+            shipping_address.shipping_user = request.user  # Assign the currently logged-in user
+            shipping_address.save()  # Save the instance to the database
+
+            messages.success(request, "Your shipping address has been saved successfully!")
+            return redirect("billing-info")
+        else:
+            # Add messages for form errors
+            messages.success(request, "Fill your shipping address")
+            for error in shipping_form.errors.values():
+                messages.error(request, error)
+            shipping_form = ShippingAddressForm(instance=shipping_user)
 
         context ={"cart_products": cart_products,
                        "totals": totals,
@@ -41,12 +54,29 @@ def checkout(request):
 
     else:
         #checkout as guest
-        shipping_form = ShippingAddressForm(request.POST or None)
+
+        shipping_form = ShippingAddressForm(request.POST)
+        if request.method == 'POST' and shipping_form.is_valid():
+            # Save the shipping address without associating it to a user
+            shipping_form.save()
+            messages.success(request, "Your shipping address has been saved successfully!")
+            return redirect("billing-info")
+            # else:
+            #     # Provide feedback on invalid form submission
+            #     if request.method == 'POST':
+            #         messages.success(request, "Please fill in your shipping address correctly.")
+            #         for error in shipping_form.errors.values():
+            #             messages.error(request, error)
+        else:
+            messages.success(request, "Please fill in your shipping address correctly.")
+            shipping_form = ShippingAddressForm()
+
         context = {"cart_products": cart_products,
                    "totals": totals,
                    "quantities": quantities,
                    "shipping_form": shipping_form
                    }
+
         return render(request, "order/checkout.html", context)
 
 
