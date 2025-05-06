@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .form import AddProduct
 from .models import Product, Category
 from django.http import Http404,HttpResponse
-
+from django.test import override_settings
 from django.contrib import messages
 
-# Custom 404 error handler
+@override_settings(DEBUG=False)
 def custom_404_view(request, exception):
+    messages.success(request, "Page not found")
     return render(request, "product/404.html", status=404)
 
 

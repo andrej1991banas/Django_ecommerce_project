@@ -27,3 +27,6 @@ urlpatterns = [
     path('', include('cart.urls')),
     path('', include('order.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Custom 404 handler
+handler404 = 'product.views.custom_404_view'  # Path to custom_404_view

@@ -1,4 +1,4 @@
-
+import unittest
 from product.form import AddProduct
 from django.test import TestCase
 from django.urls import reverse
@@ -34,6 +34,7 @@ class AddProductTest(TestCase):
     @patch("product.utils.generate_product_description")
     def test_form_valid_data(self, mock_generate_description):
         """ Test case for valid data in the form """
+        super().setUp()
         # Mock the description generator
         mock_generate_description.return_value = "This is a generated description."
 
@@ -73,3 +74,5 @@ class AddProductTest(TestCase):
         self.assertIn('category', form.errors)
         print ("Test case for missing data in the form successfully completed!")
 
+if __name__ == '__main__':
+    unittest.main()

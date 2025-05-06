@@ -1,6 +1,6 @@
 import os
 import django
-
+import unittest
 # Explicitly set the DJANGO_SETTINGS_MODULE variable at runtime if not set
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eshop.settings")
 django.setup()
@@ -181,3 +181,5 @@ class CrudProductTestCase(TestCase):
 
 
 
+if __name__ == '__main__':
+    unittest.main()

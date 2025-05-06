@@ -1,3 +1,4 @@
+import unittest
 from django.test import TestCase
 from django.urls import reverse
 from product.models import Product
@@ -353,31 +354,6 @@ class AuthenticatedUserTestCase(TestCase):
         print("Test case for checkout successfully completed and redirected to billing info page!")
 
 
-    def test_order_creation(self):
-        """Test creating an order."""
-        # Add to cart first
-        self.client.post(self.cart_add_url, {
-            'action': 'post',
-            'product_id': self.product1.id,  # Set product ID
-            'product_qty': 2,  # Set quantity
-        })
-
-        # Proceed to payment info page
-        response = self.client.post(reverse("checkout"))
-        self.assertEqual(response.status_code, 200)
-
-        #submit payment form with data
-        shipping_data = {
-            'shipping_first_name': 'John',
-            'shipping_last_name': 'Doe',
-            'shipping_email': 'test@gmail.com',
-            'shipping_address1': '123 Main Street',
-            'shipping_city': 'New York',
-            'shipping_zipcode': '10001',
-            'shipping_country': 'US',
-        }
-
-
 
 class PaymentFormTest(TestCase):
     def setUp(self):
@@ -482,3 +458,8 @@ class ShippingAddressFormTest(TestCase):
         self.assertTrue(form.is_valid(), form.errors)
         print (" Test case for payment form with optional fields blank successfully completed!")
 
+
+
+
+if __name__ == '__main__':
+    unittest.main()

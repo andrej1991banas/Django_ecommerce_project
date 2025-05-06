@@ -6,17 +6,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eshop.settings")
 django.setup()
 
 
-from django.test import TestCase, override_settings, RequestFactory
-from django.urls import reverse
-from selenium.webdriver.support import expected_conditions as EC
-from django.contrib.messages import get_messages
-from django.contrib.auth.models import User
-from product.models import Category, Product
-from member.models import Member
-from cart.cart import Cart
-from django.contrib.sessions.backends.db import SessionStore
-from django.test import LiveServerTestCase
-
 import time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright

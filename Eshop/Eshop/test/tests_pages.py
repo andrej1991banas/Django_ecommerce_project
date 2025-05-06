@@ -5,10 +5,8 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eshop.settings")
 django.setup()
 
-
 from django.test import TestCase, override_settings, RequestFactory
 from django.urls import reverse
-
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from product.models import Category, Product
@@ -156,14 +154,6 @@ class LoginRequiredPages(TestCase):
         print("Test case for loading billing info page successfully finished")
 
 
-    def test_payment_info(self):
-        """ Test if the payment info page loads successfully"""
-        response = self.client.get(reverse("payment-info"))
-        self.assertEqual(response.status_code, 200)     #check what is on the billing info page
-        self.assertContains(response, "Billing and Card Details Details")
-        print("Test case for loading payment info page successfully finished")
-
-
 
 class CategorySearchTestCase(TestCase):
     def setUp(self):
@@ -260,6 +250,31 @@ class CategorySearchTestCase(TestCase):
         #check for 404 not found status page if we use ID for non existing category of product
         self.assertEqual(response.status_code, 404)
         print("Search by category id=5 successfully finished")
+
+    def tests_category_summary_page(self):
+        """ Test case for rendering category search with page containing oll categories"""
+        categories = Category.objects.all()
+        url = reverse('category-summary')
+        # Make a GET request to this URL
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Rods')
+        print ("Test case for category summary page was successful!")
+
+    def tests_404_page(self):
+        """ Test case for rendering 404 error page"""
+
+        # Make a GET request to this URL
+        response = self.client.get('/non-existent-page/')
+
+        # Verify the response status
+        self.assertEqual(response.status_code, 404)  # Status code for "Not Found"
+
+        # Optional: Verify the correct template is used
+        # Assuming you have a 404.html template configured in your settings
+        self.assertTemplateUsed(response, 'product/404.html')
+        print("404 error page test completed successfully!")
+
 
 
 

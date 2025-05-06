@@ -106,7 +106,7 @@ def billing_info(request):
                        "quantities": quantities,
                        "shipping_info": request.POST,
                        "member": member.phone_number,
-                       "billing_form": billing_form
+
                        }
             return render(request, 'order/billing_info.html', context)
 
@@ -116,9 +116,8 @@ def billing_info(request):
             context = {"cart_products": cart_products,
                            "totals": totals,
                            "quantities": quantities,
-                           "shipping_info": request.POST,
-                        "billing_form": billing_form,
-                           }
+                           "shipping_info": request.POST,}
+
             return render(request, 'order/billing_info.html', context)
     else:
          messages.success(request, "Access Denied")
@@ -128,18 +127,39 @@ def billing_info(request):
 
 def payment_info(request):
     billing_form = PaymentForm(request.POST)
+
+    # If the form is valid
+    if billing_form.is_valid():
+        # Access the cleaned data from the valid form
+        payment_data = billing_form.cleaned_data
+
+        # You can process `payment_data` here, e.g., saving it to the database
+        # or sending it to another view.
+        # print("Validated Payment Data:", payment_data)  # Debugging purpose
+
+        # Redirect to the next step in the order process
+        return redirect("process-order")
+
+    # If the form is invalid
+    else:
+        messages.success(request, "Fill in your payment information correctly.")
+        for error in billing_form.errors.values():
+            messages.error(request, error)
+
+    # Render the form again with errors displayed
     context = {
-        "billing_form" : billing_form
+        "billing_form": billing_form
     }
     return render(request, 'order/payment_info.html', context)
 
 
 
 def process_order(request):
+
     if request.POST:
         # Get billing info or nothing
-        payment_form = PaymentForm(request.POST or None)
 
+        billing_form = PaymentForm(request.POST)
         # get a instance of the Cart
         cart = Cart(request)
         cart_products = cart.get_cart_prods()
@@ -160,6 +180,7 @@ def process_order(request):
             #logged in user
             member = Member.objects.get(user=request.user)
             #Cerate Order
+
             create_order = Order(shipping_label=shipping_label, full_name=full_name, email=email, amount_paid=amount_paid)
             create_order.save()
 
@@ -197,20 +218,17 @@ def process_order(request):
             # delete shopping cart for current_user
             current_user.update(old_cart="")
 
-
-
-
             messages.success(request, f"Order Created Successfully! Thank you, {create_order.full_name} for shopping with us! Your order number is:{create_order.id}")
-            return redirect("index")
+            context = {}
+            return render(request, "user_auth/index.html", context)
+
         else:
             #not logged in
             # Create Order
             create_order = Order(shipping_label=shipping_label, full_name=full_name, email=email,
                                  amount_paid=amount_paid)
             create_order.save()
-
             # add Order Item
-
             # Get Product info
             for product in cart_products:
                 # get the IDs
@@ -237,12 +255,14 @@ def process_order(request):
 
             messages.success(request,
                              f"Order Created Successfully! Thank you for shopping with us! Your order number is:{create_order.id}")
-            return redirect("index")
+
+            context = {}
+            return render(request, "user_auth/index.html", context)
     else:
         messages.success(request, "Access Denied")
         return redirect("index")
 
-    return render(request, 'order/process_order.html', {})
+
 
 
 

@@ -94,7 +94,15 @@
 <div class="text-center mt-4">
 
            <a href="{% url 'checkout' %}" class="btn btn-sml btn-outline-warning">Update Shipping Details</a>
-    <a href="{% url 'payment-info' %}" class="btn btn-sml btn-outline-success">Continue To Billing ...</a>
+    <form method="post" action="{% url 'process-order' %}">
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                Create Order
+                            </button>
+                        </div>
+                    </form>
       </div>
     </div>
 </div>
