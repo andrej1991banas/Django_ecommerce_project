@@ -54,6 +54,7 @@ Eshop/eshop/test/tests_screenshots/...
 ---
 ###  **Test coverage**
 - May/2/2025 82% coverage of whole project
+- May 6/2025 93.56% coverage with 88 test units for the project
 
 ### 1. **Model Testing**
 - Ensures correctness of models like `User`, `Member`, `Category`, `Product`,  `Order` and `OrderItems`.
